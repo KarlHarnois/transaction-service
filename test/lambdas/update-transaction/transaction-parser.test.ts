@@ -18,7 +18,10 @@ describe("TransactionParser", () => {
     })
 
     it("parses the ids", () => {
-      expect(transactions.map(t => t.id)).toEqual(["id-1", "id-2"])
+      expect(transactions.map(t => t.id)).toEqual([
+        "txn_3441011389",
+        "txn_3730012052"
+      ])
     })
 
     it("parses the categories", () => {

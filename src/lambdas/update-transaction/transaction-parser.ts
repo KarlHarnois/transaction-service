@@ -1,3 +1,4 @@
+import { IdGenerator } from "@shared/persistence/id-generator"
 import { Transaction, TransactionSource, AccwebTransaction } from "@shared/types"
 import { Middleware } from "./transaction-parser-middlewares/middleware"
 
@@ -19,12 +20,8 @@ export class TransactionParser {
   }
 
   parseSingle(transaction: AccwebTransaction): Transaction {
-    const postedAt = (transaction.dateInscription == undefined)
-      ? undefined
-      : Date.parse(transaction.dateInscription)
-
     const result: Transaction = {
-      id: transaction.identifiant,
+      id: this.generateId(transaction),
       description: transaction.descriptionSimplifiee,
       fullDescription: transaction.descriptionCourte,
       category: this.parseCategory(transaction.categorieParentTransaction),
@@ -35,13 +32,17 @@ export class TransactionParser {
       source: this.parseSource(transaction),
       isExpensed: false,
       timestamps: {
-        postedAt: postedAt,
+        postedAt: Date.parse(transaction.dateInscription),
         authorizedAt: Date.parse(transaction.dateTransaction)
       }
     }
     return this.applyMiddlewares(result)
   }
 
+  private generateId(transaction: AccwebTransaction) {
+    const generator = new IdGenerator()
+    return generator.generateId(transaction)
+  }
   private applyMiddlewares(transaction: Transaction): Transaction {
     let result = transaction
 

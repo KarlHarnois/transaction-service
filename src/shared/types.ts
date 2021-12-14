@@ -19,7 +19,7 @@ export interface Transaction {
     updatedAt?: number,
     authorizedAt: number,
     deleted_at?: number,
-    postedAt?: number
+    postedAt: number
   }
 }
 
