@@ -74,15 +74,15 @@ describe("TransactionParser", () => {
 
     it("parses the posted dates", () => {
       expect(transactions.map(t => t.timestamps.postedAt)).toEqual([
-        1631728207000,
-        1635105763000
+        1631750400000,
+        1634860800000
       ])
     })
 
     it("parses the authorization date", () => {
       expect(transactions.map(t => t.timestamps.authorizedAt)).toEqual([
-        1631750400000,
-        1634860800000
+        1631728207000,
+        1634760163000
       ])
     })
   })
