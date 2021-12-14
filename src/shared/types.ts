@@ -17,9 +17,9 @@ export interface Transaction {
   timestamps: {
     created_at?: number,
     updatedAt?: number,
-    authorizedAt?: number,
+    authorizedAt: number,
     deleted_at?: number,
-    postedAt: number
+    postedAt?: number
   }
 }
 

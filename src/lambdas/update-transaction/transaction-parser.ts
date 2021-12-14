@@ -19,7 +19,7 @@ export class TransactionParser {
   }
 
   parseSingle(transaction: AccwebTransaction): Transaction {
-    const authorizedAt = (transaction.dateTransaction == undefined)
+    const postedAt = (transaction.dateTransaction == undefined)
       ? undefined
       : Date.parse(transaction.dateTransaction)
 
@@ -35,8 +35,8 @@ export class TransactionParser {
       source: this.parseSource(transaction),
       isExpensed: false,
       timestamps: {
-        authorizedAt: authorizedAt,
-        postedAt: Date.parse(transaction.dateInscription)
+        postedAt: postedAt,
+        authorizedAt: Date.parse(transaction.dateInscription)
       }
     }
     return this.applyMiddlewares(result)

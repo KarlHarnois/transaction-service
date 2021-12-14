@@ -21,7 +21,7 @@ describe("PersistedTransactionRepository", () => {
 
       expect(dataSource.queries[0].toInput()).toMatchObject({
         TableName: "test_table",
-        ConsistentRead: true,
+        ConsistentRead: false,
         KeyConditionExpression: "sortKey = :sortKey",
         ExpressionAttributeValues: {
           ":sortKey": "id/1234"
@@ -60,7 +60,7 @@ describe("PersistedTransactionRepository", () => {
       version: undefined,
       category: "Food",
       timestamps: {
-        postedAt: 1640482950
+        authorizedAt: 1640482950
       }
     })
 
@@ -83,7 +83,7 @@ describe("PersistedTransactionRepository", () => {
                 description: expect.any(String),
                 fullDescription: expect.any(String),
                 timestamps: {
-                  postedAt: 1640482950,
+                  authorizedAt: 1640482950,
                   updatedAt: expect.any(Number),
                 }
               }
