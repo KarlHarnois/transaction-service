@@ -4,6 +4,9 @@ const hash = require("string-hash")
 
 export class IdGenerator {
   generateId(transaction: AccwebTransaction) {
-    return `txn_${hash(`${transaction.dateTransaction}${transaction.montantDevise}`)}`
+    const date = hash(transaction.dateTransaction)
+    const amount = hash(transaction.montantTransaction)
+    const name = hash(transaction.descriptionCourte)
+    return `txn_${date}${amount}${name}`
   }
 }
