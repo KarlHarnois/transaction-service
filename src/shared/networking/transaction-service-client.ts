@@ -5,6 +5,10 @@ export interface TransactionUpdatePayload {
   type: string
 }
 
+export interface UpdateTransactionResponse {
+  transaction: Transaction
+}
+
 export interface AccwebUpdatePayload extends TransactionUpdatePayload {
   sourceName: string
   transaction: AccwebTransaction
@@ -21,7 +25,7 @@ export class TransactionServiceClient {
     this.props = props
   }
 
-  updateTransaction(payload: AccwebUpdatePayload): Promise<Transaction[]> {
+  updateTransaction(payload: AccwebUpdatePayload): Promise<UpdateTransactionResponse> {
     return fetch(`${this.props.baseUrl}/transactions`, {
       method: "PUT",
       body: JSON.stringify(payload),
@@ -33,7 +37,7 @@ export class TransactionServiceClient {
     })
     .then(this.validateResponse)
     .then(res => res.json())
-    .then(json => json as Transaction[])
+    .then(json => json as UpdateTransactionResponse)
   }
 
   private async validateResponse(response: Response): Promise<Response> {
