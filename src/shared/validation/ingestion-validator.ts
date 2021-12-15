@@ -16,19 +16,26 @@ export class IngestionValidator {
   }
 
   private validateIds(transactions: Transaction[]): Error[] {
-    let countByIsd: { [key: string]: number } = {}
+    let transactionByIds: { [key: string]: Transaction[] } = {}
 
     transactions.forEach(txn => {
-      const count = countByIsd[txn.id] ?? 0
-      countByIsd[txn.id] = count + 1
+      let list = transactionByIds[txn.id] ?? []
+      list.push(txn)
+      transactionByIds[txn.id] = list
     })
 
+    return this.errorsForDuplicateIds(transactionByIds)
+  }
+
+  private errorsForDuplicateIds(hash: { [key: string]: Transaction[] }) {
     let errors: Error[] = []
 
-    Object.keys(countByIsd).forEach(id => {
-      const count = countByIsd[id]
+    Object.keys(hash).forEach(id => {
+      const transactions = hash[id]
+      const count = transactions.length
       if (count <= 1) return
-      const error = new Error(`Found ${count} duplicate transaction ids: ${id}`)
+      const descriptions = transactions.map(txn => txn.description).join(", ")
+      const error = new Error(`Found ${count} duplicate transaction ids ${id} with descriptions: ${descriptions}`)
       errors.push(error)
     })
 
