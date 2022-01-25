@@ -7,7 +7,7 @@
 - Get transaction total for a category for a year
 - Get transaction total for a subcategory for a year
 - Get expenses for a month+year
-- Get expense by id
+- Get expense for a given transaction
 - Get expense total for a category for a month+year
 - Get expense total for a subcategory for a month+year
 - Get expense total for a category for a year
@@ -27,7 +27,7 @@ Primary Key:
 | Year-Month  | id               | jsonObject |
 | 2020-12     | txn_1XA2929112q8 | { ... }    |
 ```
-GSI to get transaction by id:
+GSI 1 to get transaction by id:
 ```
 | Secondary Key    |            |
 | PK               | Attributes |
@@ -35,7 +35,6 @@ GSI to get transaction by id:
 | id               | jsonObject |
 | txn_1XA2929112q8 | { ... }    |
 ```
-
 ### Expense
 Primary Key:
 ```
@@ -45,11 +44,19 @@ Primary Key:
 | Year-Month  | id               | jsonObject |
 | 2020-12     | exp_328SD822az89 | { ... }    |
 ```
-GSI to get expense by id
+GSI 1 to get expense by id:
 ```
 | Secondary Key    |            |
 | PK               | Attributes |
 |------------------|------------|
 | id               | jsonObject |
 | exp_328SD822az89 | { ... }    |
+```
+GSI 2 to get expense for a given transaction
+```
+| Secondary Key                       |            |
+| PK               | SK               | Attributes |
+|------------------|------------------|------------|
+| transactionId    | id               | jsonObject |
+| txn_1XA2929112q8 | exp_328SD822az89 | { ... }    |
 ```
