@@ -19,7 +19,7 @@
 - ExpenseTotalView (category, subcategory, centAmount, month, year)
 
 ### Transaction
-Primary Key:
+Get transactions by month+year:
 ```
 | Primary Key                    |            |
 | PK          | SK               | Attributes |
@@ -36,7 +36,7 @@ GSI 1 to get transaction by id:
 | txn_1XA2929112q8 | { ... }    |
 ```
 ### Expense
-Primary Key:
+Get expenses by month+year:
 ```
 | Primary Key                    |            |
 | PK          | SK               | Attributes |
@@ -52,11 +52,26 @@ GSI 1 to get expense by id:
 | id               | jsonObject |
 | exp_328SD822az89 | { ... }    |
 ```
-GSI 2 to get expense for a given transaction
+GSI 2 to get expense for a given transaction:
 ```
 | Secondary Key                       |            |
 | PK               | SK               | Attributes |
 |------------------|------------------|------------|
-| transactionId    | id               | jsonObject |
+| relationshipId   | id               | jsonObject |
 | txn_1XA2929112q8 | exp_328SD822az89 | { ... }    |
+```
+### Accweb Transaction
+Get Accweb transactions by month+year:
+| Primary Key                    |            |
+| PK          | SK               | Attributes |
+|-------------|------------------|------------|
+| Year-Month  | id               | jsonObject |
+| 2020-12     | acc_229a9229AS2w | { ... }    |
+GSI 2 to get Accweb transaction for a given transaction:
+```
+| Secondary Key                       |            |
+| PK               | SK               | Attributes |
+|------------------|------------------|------------|
+| relationshipId   | id               | jsonObject |
+| txn_1XA2929112q8 | acc_229a9229AS2w | { ... }    |
 ```
