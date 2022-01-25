@@ -57,6 +57,12 @@ Get Accweb transactions by month+year:
 | Year-Month  | id               | jsonObject |
 | 2020-12     | acc_229a9229AS2w | { ... }    |
 
+GSI 1 to get Accweb transaction by id:
+| PK               | Attributes |
+|------------------|------------|
+| id               | jsonObject |
+| acc_229a9229AS2w | { ... }    |
+
 GSI 2 to get Accweb transaction for a given transaction:
 | PK               | SK               | Attributes |
 |------------------|------------------|------------|
