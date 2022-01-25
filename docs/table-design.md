@@ -22,15 +22,15 @@ This provide access of entities by month+year where we can sort the entity type 
 - Transaction ids are prefixed by `txn`
 - Expense ids are prefixed by `exp`
 - Accweb transaction ids are prefixed by `act`
-- Accweb import ids are prefixed by `aci`
+- Accweb import ids are prefixed by `imp`
 
 | PK           | SK               | Attribute        | Attribute        | Attribute    |
 |--------------|------------------|------------------|------------------|--------------|
 | *Year-Month* | *id*             | *transactionId*  | *importId*       | *jsonObject* |
 | 2020-12      | txn_1XA2929112q8 | —                | —                | { ... }      |
 | 2020-12      | exp_328SD822az89 | txn_1XA2929112q8 | —                | { ... }      |
-| 2020-12      | act_229a9229AS2w | txn_1XA2929112q8 | aci_553DFd302s23 | { ... }      |
-| 2020-12      | aci_553DFd302s23 | —                | —                | { ... }      |
+| 2020-12      | act_229a9229AS2w | txn_1XA2929112q8 | imp_553DFd302s23 | { ... }      |
+| 2020-12      | imp_553DFd302s23 | —                | —                | { ... }      |
 
 ### GSI 1
 This index is to access entities by id.
@@ -39,8 +39,8 @@ This index is to access entities by id.
 | *id*             | *Year-Month* | *transactionId*  | *importId*       | *jsonObject* |
 | txn_1XA2929112q8 | 2020-12      | —                | —                | { ... }      |
 | exp_328SD822az89 | 2020-12      | txn_1XA2929112q8 | —                | { ... }      |
-| act_229a9229AS2w | 2020-12      | txn_1XA2929112q8 | aci_553DFd302s23 | { ... }      |
-| aci_553DFd302s23 | 2020-12      | —                | —                | { ... }      |
+| act_229a9229AS2w | 2020-12      | txn_1XA2929112q8 | imp_553DFd302s23 | { ... }      |
+| imp_553DFd302s23 | 2020-12      | —                | —                | { ... }      |
 
 ### GSI 2
 This index is for relationships between entities and transactions. Match the sort key id prefix to filter the entity type.
@@ -55,4 +55,4 @@ This index is for the relationship between Accweb imports and Accweb transaction
 | PK               | Attribute    | Attribute        | Attribute        | Attribute    |
 |------------------|--------------|------------------|------------------|--------------|
 | *importId*       | *Year-Month* | *id*             | *transactionId*  | *jsonObject* |
-| aci_553DFd302s23 | 2020-12      | act_229a9229AS2w | txn_1XA2929112q8 | { ... }      |
+| imp_553DFd302s23 | 2020-12      | act_229a9229AS2w | txn_1XA2929112q8 | { ... }      |
