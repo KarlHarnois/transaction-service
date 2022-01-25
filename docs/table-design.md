@@ -20,6 +20,7 @@ This provide access of entities by month+year where we can sort the entity type 
 - Transaction ids are prefixed by `txn`
 - Accweb transaction ids are prefixed by `acc`
 - Expense ids are prefixed by `exp`
+
 | PK           | SK               | Attribute        | Attribute  |
 |--------------|------------------|------------------|------------|
 | *Year-Month* | *id*             | *relationshipId* | jsonObject |
@@ -40,6 +41,7 @@ This index is to access entities by id.
 This index is for relationships between entities. Here are the access patterns:
 - Get expense for a transaction
 - Get Accweb transaction for a transaction
+
 | PK               | SK               | Attribute    | Attribute  |
 |------------------|------------------|--------------|------------|
 | *relationshipId* | *id*             | *Year-Month* | jsonObject |
