@@ -1,4 +1,14 @@
 # Table Design
+## Entities
+### Transactions
+...
+
+### Expense
+...
+
+### Accweb Transactions and Imports
+...
+
 ## Access Patterns
 - Get transactions for a month+year
 - Get a transaction by id
@@ -16,7 +26,7 @@
 - Get Accweb transaction for a Accweb import
 - Get Accweb imports for a month+year
 
-## Schema
+## Table
 ### Composite Primary Key
 This provide access of entities by month+year where we can sort the entity type with the id prefixes:
 - Transaction ids are prefixed by `txn`
