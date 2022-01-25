@@ -23,7 +23,7 @@ This provide access of entities by month+year where we can sort the entity type 
 
 | PK           | SK               | Attribute        | Attribute    |
 |--------------|------------------|------------------|--------------|
-| *Year-Month* | *id*             | *relationshipId* | *jsonObject* |
+| *Year-Month* | *id*             | *transactionId*  | *jsonObject* |
 | 2020-12      | txn_1XA2929112q8 | —                | { ... }      |
 | 2020-12      | acc_229a9229AS2w | txn_1XA2929112q8 | { ... }      |
 | 2020-12      | exp_328SD822az89 | txn_1XA2929112q8 | { ... }      |
@@ -32,19 +32,16 @@ This provide access of entities by month+year where we can sort the entity type 
 This index is to access entities by id.
 | PK               | Attribute    | Attribute        | Attribute    |
 |------------------|--------------|------------------|--------------|
-| *id*             | *Year-Month* | *relationshipId* | *jsonObject* |
+| *id*             | *Year-Month* | *transactionId*  | *jsonObject* |
 | txn_1XA2929112q8 | 2020-12      | —                | { ... }      |
 | acc_229a9229AS2w | 2020-12      | txn_1XA2929112q8 | { ... }      |
 | exp_328SD822az89 | 2020-12      | txn_1XA2929112q8 | { ... }      |
 
 ### GSI 2
-This index is for relationships between entities, usually between a transaction and something else. Match the sort key id prefix to filter the entity type. Here are the access patterns:
-- Get expense for a transaction
-- Get Accweb transaction for a transaction
-
+This index is for relationships between entities and transactions. Match the sort key id prefix to filter the entity type.
 | PK               | SK               | Attribute    | Attribute    |
 |------------------|------------------|--------------|--------------|
-| *relationshipId* | *id*             | *Year-Month* | *jsonObject* |
+| *transactionId*  | *id*             | *Year-Month* | *jsonObject* |
 | —                | txn_1XA2929112q8 | 2020-12      | { ... }      |
 | txn_1XA2929112q8 | acc_229a9229AS2w | 2020-12      | { ... }      |
 | txn_1XA2929112q8 | exp_328SD822az89 | 2020-12      | { ... }      |
