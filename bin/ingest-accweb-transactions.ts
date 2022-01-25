@@ -1,12 +1,37 @@
 import { env, chunk } from "@shared/utils"
 import { AuthToken } from "@shared/auth-token"
 import { TransactionServiceClient } from "@shared/networking/transaction-service-client"
-import { AccwebTransaction } from "@shared/types"
+import { AccwebTransaction, Transaction } from "@shared/types"
 import * as fs from "fs"
+import { IngestionValidator } from "@shared/validation/ingestion-validator"
 
 require("dotenv").config({ path: ".envrc" })
 
 const sourceName = "MasterCard"
+
+interface Summary {
+  successes: SuccessResult[]
+  errors: ErrorResult[]
+}
+
+type Result = SuccessResult | ErrorResult
+
+interface SuccessResult {
+  transaction: Transaction
+}
+
+interface ErrorResult {
+  error: Error
+  accwebIdentifier: string
+}
+
+function isSuccess(result: Result): result is SuccessResult {
+  return (result as SuccessResult).transaction !== undefined
+}
+
+function isError(result: Result): result is ErrorResult {
+  return (result as ErrorResult).error !== undefined
+}
 
 function readTransactions(): Promise<AccwebTransaction[]> {
   const filepath = "./tmp/transactions.json"
@@ -21,33 +46,43 @@ function readTransactions(): Promise<AccwebTransaction[]> {
   return Promise.resolve(transactions)
 }
 
-async function createSingleTransaction(client: TransactionServiceClient, transaction: AccwebTransaction) {
+async function createSingleTransaction(client: TransactionServiceClient, transaction: AccwebTransaction): Promise<Result> {
   try {
-    await client.updateTransaction({
+    const response = await client.updateTransaction({
       type: "accweb",
       sourceName: sourceName,
       transaction: transaction
     })
     process.stdout.write(".")
-    return { type: "transaction" }
-  } catch {
+
+    return { transaction: response.transaction }
+  } catch (error) {
     process.stdout.write("x")
-    return { type: "error" }
+
+    return {
+      error: (error as Error),
+      accwebIdentifier: transaction.identifiant
+    }
   }
 }
 
-function aggregateResults(results: { type: string }[]) {
-  let counts = { transactions: 0, errors: 0 }
+function aggregateResults(results: Result[]) {
+  let summary: Summary = {
+    successes: [],
+    errors: []
+  }
 
   results.forEach(result => {
-    if (result.type === "transaction") {
-      counts.transactions += 1
+    if (isError(result)) {
+      summary.errors.push(result)
+    } else if (isSuccess(result)) {
+      summary.successes.push(result)
     } else {
-      counts.errors += 1
+      console.log(`Something unexpected happened: ${result}`)
     }
   })
 
-  return counts
+  return summary
 }
 
 async function createManyTransactions(transactions: AccwebTransaction[]) {
@@ -63,7 +98,7 @@ async function createManyTransactions(transactions: AccwebTransaction[]) {
 
   console.log(`Pushing ${transactions.length} transactions to the transaction service...`)
 
-  let allResults: { type: string }[] = []
+  let allResults: Result[] = []
 
   const transactionBatches = chunk({ elements: transactions, size: 10 })
 
@@ -79,7 +114,16 @@ async function createManyTransactions(transactions: AccwebTransaction[]) {
 
 readTransactions()
   .then(createManyTransactions)
-  .then(counts => {
-    console.log(`Created ${counts.transactions} transactions with ${counts.errors} errors`)
+  .then(summary => {
+    console.log(`Created ${summary.successes.length} transactions with ${summary.errors.length} errors`)
+
+    summary.errors.forEach((error) => {
+      console.log(`Error for transaction ${error.accwebIdentifier}: ${error.error}`)
+    })
+
+    const output = new IngestionValidator()
+      .validate(summary.successes.flatMap(s => s.transaction))
+      .errors
+      .forEach(error => console.log(error.message))
   })
   .catch(err => console.log(err.message))

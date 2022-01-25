@@ -25,14 +25,14 @@ export class PersistTransaction implements Mutation {
     const transaction = this.props.transaction
     const now = Date.now()
     const createdAt = transaction.timestamps.created_at || now
-    const postedAt = new Date(transaction.timestamps.postedAt)
+    const authorizedAt = new Date(transaction.timestamps.authorizedAt)
 
     return {
       Put: {
         TableName: this.props.tableName,
         Item: {
           ...transaction,
-          resourceId: `transaction/${postedAt.getFullYear()}-${postedAt.getMonth() + 1}`,
+          resourceId: `transaction/${authorizedAt.getFullYear()}-${authorizedAt.getMonth() + 1}`,
           sortKey: `id/${transaction.id}`,
           timestamps: {
             ...transaction.timestamps,

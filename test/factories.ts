@@ -12,7 +12,7 @@ export function createTransaction(attributes: any): types.Transaction {
       name: "source_name"
     },
     timestamps: {
-      postedAt: Date.now()
+      authorizedAt: Date.now()
     },
     ...attributes
   }

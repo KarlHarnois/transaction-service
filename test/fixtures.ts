@@ -32,7 +32,7 @@ export const accwebTransactions: AccwebTransaction[] = [
     "typeTransaction": "AutreAutorisation",
     "descriptionCourte": "CENTRE DE JEUX EXPEDIT - Full desc",
     "descriptionSimplifiee": "Centre De Jeux Expedit",
-    "dateTransaction": "2021-10-24T20:02:43Z",
+    "dateTransaction": "2021-10-20T20:02:43Z",
     "devise": "CAD",
     "numeroCarteMasque": "2121 21** **** 0000",
     "codeRelation": "P"

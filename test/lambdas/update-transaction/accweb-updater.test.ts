@@ -39,7 +39,7 @@ describe("AccwebUpdater", () => {
 
     describe("when a transaction with the same id already exists", () => {
       beforeEach(() => {
-        const existingVersion = factories.createTransaction({ id: "id-2", isExpensed: true })
+        const existingVersion = factories.createTransaction({ id: "txn_37561336141111237231129609267", isExpensed: true })
         repo.transactions.push(existingVersion)
       })
 

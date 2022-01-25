@@ -18,7 +18,10 @@ describe("TransactionParser", () => {
     })
 
     it("parses the ids", () => {
-      expect(transactions.map(t => t.id)).toEqual(["id-1", "id-2"])
+      expect(transactions.map(t => t.id)).toEqual([
+        "txn_133591027536626244433877038067",
+        "txn_37561336141111237231129609267"
+      ])
     })
 
     it("parses the categories", () => {
@@ -82,7 +85,7 @@ describe("TransactionParser", () => {
     it("parses the authorization date", () => {
       expect(transactions.map(t => t.timestamps.authorizedAt)).toEqual([
         1631728207000,
-        1635105763000
+        1634760163000
       ])
     })
   })
