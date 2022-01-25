@@ -38,7 +38,7 @@ This index is to access entities by id.
 | exp_328SD822az89 | 2020-12      | txn_1XA2929112q8 | { ... }      |
 
 ### GSI 2
-This index is for relationships between entities. Match the sort key id prefix to filter the entity type. Here are the access patterns:
+This index is for relationships between entities, usually between a transaction and something else. Match the sort key id prefix to filter the entity type. Here are the access patterns:
 - Get expense for a transaction
 - Get Accweb transaction for a transaction
 
