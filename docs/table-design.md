@@ -30,7 +30,7 @@ This provide access of entities by month+year where we can sort the entity type 
 
 ### GSI 1
 This index is to access entities by id.
-| SK               | Attributes   | Attribute        | Attribute    |
+| PK               | Attributes   | Attribute        | Attribute    |
 |------------------|--------------|------------------|--------------|
 | *id*             | *Year-Month* | *relationshipId* | *jsonObject* |
 | txn_1XA2929112q8 | 2020-12      | —                | { ... }      |
