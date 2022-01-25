@@ -14,57 +14,35 @@
 - Get expense total for a subcategory for a year
 - Create an expense for a specific transaction by id
 
-## Entities
-- TransactionTotalView (category, subcategory, centAmount, month, year)
-- ExpenseTotalView (category, subcategory, centAmount, month, year)
+## Schema
+### Composite Primary Key
+This provide access of entities by month+year where we can sort the entity type with the id prefixes:
+- Transaction ids are prefixed by `txn`
+- Accweb transaction ids are prefixed by `acc`
+- Expense ids are prefixed by `exp`
+| PK           | SK               | Attribute        | Attribute  |
+|--------------|------------------|------------------|------------|
+| *Year-Month* | *id*             | *relationshipId* | jsonObject |
+| 2020-12      | txn_1XA2929112q8 | —                | { ... }    |
+| 2020-12      | acc_229a9229AS2w | txn_1XA2929112q8 | { ... }    |
+| 2020-12      | exp_328SD822az89 | txn_1XA2929112q8 | { ... }    |
 
-### Transaction
-Get transactions by month+year:
-| PK          | SK               | Attributes |
-|-------------|------------------|------------|
-| Year-Month  | id               | jsonObject |
-| 2020-12     | txn_1XA2929112q8 | { ... }    |
+### GSI 1
+This index is to access entities by id.
+| SK               | Attributes   | Attribute        | Attribute |
+|------------------|--------------|------------------|------------|
+| *id*             | *Year-Month* | *relationshipId* | jsonObject |
+| txn_1XA2929112q8 | 2020-12      | —                | { ... }    |
+| acc_229a9229AS2w | 2020-12      | txn_1XA2929112q8 | { ... }    |
+| exp_328SD822az89 | 2020-12      | txn_1XA2929112q8 | { ... }    |
 
-GSI 1 to get transaction by id:
-| PK               | Attributes |
-|------------------|------------|
-| id               | jsonObject |
-| txn_1XA2929112q8 | { ... }    |
-
-### Expense
-Get expenses by month+year:
-| PK          | SK               | Attributes |
-|-------------|------------------|------------|
-| Year-Month  | id               | jsonObject |
-| 2020-12     | exp_328SD822az89 | { ... }    |
-
-GSI 1 to get expense by id:
-| PK               | Attributes |
-|------------------|------------|
-| id               | jsonObject |
-| exp_328SD822az89 | { ... }    |
-
-GSI 2 to get expense for a given transaction:
-| PK               | SK               | Attributes |
-|------------------|------------------|------------|
-| relationshipId   | id               | jsonObject |
-| txn_1XA2929112q8 | exp_328SD822az89 | { ... }    |
-
-### Accweb Transaction
-Get Accweb transactions by month+year:
-| PK          | SK               | Attributes |
-|-------------|------------------|------------|
-| Year-Month  | id               | jsonObject |
-| 2020-12     | acc_229a9229AS2w | { ... }    |
-
-GSI 1 to get Accweb transaction by id:
-| PK               | Attributes |
-|------------------|------------|
-| id               | jsonObject |
-| acc_229a9229AS2w | { ... }    |
-
-GSI 2 to get Accweb transaction for a given transaction:
-| PK               | SK               | Attributes |
-|------------------|------------------|------------|
-| relationshipId   | id               | jsonObject |
-| txn_1XA2929112q8 | acc_229a9229AS2w | { ... }    |
+### GSI 2
+This index is for relationships between entities. Here are the access patterns:
+- Get expense for a transaction
+- Get Accweb transaction for a transaction
+| PK               | SK               | Attribute    | Attribute  |
+|------------------|------------------|--------------|------------|
+| *relationshipId* | *id*             | *Year-Month* | jsonObject |
+| —                | txn_1XA2929112q8 | 2020-12      | { ... }    |
+| txn_1XA2929112q8 | acc_229a9229AS2w | 2020-12      | { ... }    |
+| txn_1XA2929112q8 | exp_328SD822az89 | 2020-12      | { ... }    |
