@@ -62,6 +62,7 @@ GSI 2 to get expense for a given transaction:
 ```
 ### Accweb Transaction
 Get Accweb transactions by month+year:
+
 | Primary Key                    |            |
 | PK          | SK               | Attributes |
 |-------------|------------------|------------|
