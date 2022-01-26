@@ -99,9 +99,7 @@ export class AccwebDownloadAutomation {
     const body = await response.body()
     const json = JSON.parse(body.toString())
     const authorized = json.sectionAutorisee.transactionListe
-    const unauthorized = json.sectionFacturee.transactionListe
-    const all = authorized.concat(unauthorized)
-    return all
+    return authorized
   }
 
   private get product() {
