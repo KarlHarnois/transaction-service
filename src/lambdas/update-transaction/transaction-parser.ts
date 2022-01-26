@@ -43,6 +43,7 @@ export class TransactionParser {
     const generator = new IdGenerator()
     return generator.generateId(transaction)
   }
+
   private applyMiddlewares(transaction: Transaction): Transaction {
     let result = transaction
 
