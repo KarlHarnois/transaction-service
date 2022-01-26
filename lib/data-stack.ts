@@ -10,28 +10,47 @@ export class DataStack extends core.Stack {
   constructor(scope: core.Construct, id: string, props: DataStackProps) {
     super(scope, id, props)
 
-    this.table = new dynamodb.Table(this, "Table", {
-      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-      partitionKey: {
-        name: "resourceId",
-        type: dynamodb.AttributeType.STRING
-      },
-      sortKey: {
-        name: "sortKey",
-        type: dynamodb.AttributeType.STRING
-      }
-    })
+    this.table = this.createTable()
 
-    this.table.addGlobalSecondaryIndex({
-      indexName: "transactionIdIndex",
-      partitionKey: {
-        name: "sortKey",
-        type: dynamodb.AttributeType.STRING
-      }
-    })
+    // Check docs/table-design.md for more info.
+    this.addGSI({ name: "GSI 1", partitionKey: "SK" })
+    this.addGSI({ name: "GSI 2", partitionKey: "transactionId", sortKey: "SK" })
+    this.addGSI({ name: "GSI 3", partitionKey: "importId", sortKey: "PK" })
 
     new core.CfnOutput(this, "TableName", {
       value: this.table.tableName
     })
+  }
+
+  private createTable(): dynamodb.Table {
+    return new dynamodb.Table(this, "Table", {
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      partitionKey: {
+        name: "PK",
+        type: dynamodb.AttributeType.STRING
+      },
+      sortKey: {
+        name: "SK",
+        type: dynamodb.AttributeType.STRING
+      }
+    })
+  }
+
+  private addGSI(args: { name: string, partitionKey: string, sortKey?: string }) {
+    const props: dynamodb.GlobalSecondaryIndexProps = {
+      indexName: args.name,
+      partitionKey: {
+        name: args.partitionKey,
+        type: dynamodb.AttributeType.STRING
+      },
+      ... (args.sortKey && {
+        sortKey: {
+          name: args.sortKey,
+          type: dynamodb.AttributeType.STRING
+        }
+      })
+    }
+
+    this.table.addGlobalSecondaryIndex(props)
   }
 }
