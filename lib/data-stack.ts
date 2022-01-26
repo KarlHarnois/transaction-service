@@ -12,7 +12,7 @@ export class DataStack extends core.Stack {
 
     this.table = this.createTable()
 
-    // Check docs/table-design.md for more info.
+    // Check /docs/table-design.md for more info.
     this.addGSI({ name: "GSI 1", partitionKey: "SK" })
     this.addGSI({ name: "GSI 2", partitionKey: "transactionId", sortKey: "SK" })
     this.addGSI({ name: "GSI 3", partitionKey: "importId", sortKey: "PK" })

@@ -41,7 +41,7 @@ export class TransactionParser {
 
   private generateId(transaction: AccwebTransaction) {
     const generator = new IdGenerator()
-    return generator.generateId(transaction)
+    return generator.generateTransactionId(transaction)
   }
 
   private applyMiddlewares(transaction: Transaction): Transaction {
