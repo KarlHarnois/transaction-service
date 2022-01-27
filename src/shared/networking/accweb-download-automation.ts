@@ -13,7 +13,7 @@ export class AccwebDownloadAutomation {
   private readonly page
 
   private readonly QUESTION_LABEL_SELECTOR = "label[for=valeurReponse]"
-  private readonly PRODUCT_DETAIL_SELECTOR = ".lien-detail"
+  private readonly PRODUCT_TITLE_SELECTOR = ".titre-produit"
 
   constructor(props: {
     credentials: Credentials,
@@ -27,7 +27,7 @@ export class AccwebDownloadAutomation {
   async perform(): Promise<AccwebTransaction[]> {
     await this.gotoLogin()
     await this.fillLogin()
-    await this.waitForSummaryOrQuestion()
+    await this.waitForScreenAfterLogin()
 
     if (!this.isProductSummary) {
       await this.answerQuestion()
@@ -48,10 +48,10 @@ export class AccwebDownloadAutomation {
     await this.page.click("button[type=submit]")
   }
 
-  private async waitForSummaryOrQuestion() {
+  private async waitForScreenAfterLogin() {
     await Promise.any([
       this.page.waitForSelector(this.QUESTION_LABEL_SELECTOR),
-      this.page.waitForSelector(this.PRODUCT_DETAIL_SELECTOR)
+      this.page.waitForSelector(this.PRODUCT_TITLE_SELECTOR)
     ])
   }
 
@@ -74,7 +74,7 @@ export class AccwebDownloadAutomation {
   }
 
   private async gotoProduct() {
-    const selector = this.PRODUCT_DETAIL_SELECTOR
+    const selector = this.PRODUCT_TITLE_SELECTOR
     await this.page.waitForSelector(selector)
     const allLinks = await this.page.$$(selector)
     const link = await utils.asyncFind(allLinks, async link => this.isProductLink(link))
@@ -98,8 +98,7 @@ export class AccwebDownloadAutomation {
     })
     const body = await response.body()
     const json = JSON.parse(body.toString())
-    const authorized = json.sectionAutorisee.transactionListe
-    return authorized
+    return json.sectionFacturee.transactionListe
   }
 
   private get product() {

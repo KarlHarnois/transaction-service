@@ -17,10 +17,10 @@ export class FindSingleTransaction implements Query {
   toInput() {
     return {
       TableName: this.props.tableName,
-      IndexName: "transactionIdIndex",
-      KeyConditionExpression: "sortKey = :sortKey",
+      IndexName: "GSI1",
+      KeyConditionExpression: "SK = :sortKey",
       ExpressionAttributeValues: {
-        ":sortKey": `id/${this.props.id}`
+        ":sortKey": this.props.id
       },
       ConsistentRead: false
     }
@@ -41,9 +41,10 @@ export class FindManyTransactions implements Query {
   toInput() {
     return {
       TableName: this.props.tableName,
-      KeyConditionExpression: "resourceId = :resourceId",
+      KeyConditionExpression: "PK = :partitionKey and begins_with(SK, :type)",
       ExpressionAttributeValues: {
-        ":resourceId": `transaction/${this.props.year}-${this.props.month}`
+        ":partitionKey": `${this.props.year}-${this.props.month}`,
+        ":type": "txn"
       },
       ConsistentRead: true
     }

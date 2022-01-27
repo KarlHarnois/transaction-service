@@ -13,9 +13,9 @@ export class DataStack extends core.Stack {
     this.table = this.createTable()
 
     // Check /docs/table-design.md for more info.
-    this.addGSI({ name: "GSI 1", partitionKey: "SK" })
-    this.addGSI({ name: "GSI 2", partitionKey: "transactionId", sortKey: "SK" })
-    this.addGSI({ name: "GSI 3", partitionKey: "importId", sortKey: "PK" })
+    this.addGSI({ number: 1, partitionKey: "SK" })
+    this.addGSI({ number: 2, partitionKey: "transactionId", sortKey: "SK" })
+    this.addGSI({ number: 3, partitionKey: "importId", sortKey: "PK" })
 
     new core.CfnOutput(this, "TableName", {
       value: this.table.tableName
@@ -36,9 +36,9 @@ export class DataStack extends core.Stack {
     })
   }
 
-  private addGSI(args: { name: string, partitionKey: string, sortKey?: string }) {
+  private addGSI(args: { number: number, partitionKey: string, sortKey?: string }) {
     const props: dynamodb.GlobalSecondaryIndexProps = {
-      indexName: args.name,
+      indexName: `GSI${args.number}`,
       partitionKey: {
         name: args.partitionKey,
         type: dynamodb.AttributeType.STRING
