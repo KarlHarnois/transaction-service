@@ -13,7 +13,6 @@ export interface Transaction {
   currency: string
   currencyCentAmount: number
   source: TransactionSource,
-  isExpensed: boolean,
   timestamps: {
     created_at?: number,
     updatedAt?: number,

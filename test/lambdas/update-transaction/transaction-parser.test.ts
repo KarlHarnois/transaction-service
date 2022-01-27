@@ -40,10 +40,6 @@ describe("TransactionParser", () => {
       expect(transactions.map(t => t.currencyCentAmount)).toEqual([15026, 6666])
     })
 
-    it("sets the expensed flag to false", () => {
-      expect(transactions.map(t => t.isExpensed)).toEqual([false, false])
-    })
-
     it("parses the descriptions", () => {
       expect(transactions.map(t => t.description)).toEqual([
         "Rb - Epicerie 1111",

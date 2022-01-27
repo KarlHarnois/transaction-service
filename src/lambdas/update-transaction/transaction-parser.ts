@@ -30,7 +30,6 @@ export class TransactionParser {
       currency: transaction.devise,
       currencyCentAmount: this.parseCurrencyAmount(transaction),
       source: this.parseSource(transaction),
-      isExpensed: false,
       timestamps: {
         postedAt: Date.parse(transaction.dateInscription),
         authorizedAt: Date.parse(transaction.dateTransaction)
