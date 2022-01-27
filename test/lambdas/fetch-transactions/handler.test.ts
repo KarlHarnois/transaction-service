@@ -43,8 +43,11 @@ describe("Handler", () => {
 
     expect(datasource.queries[0].toInput()).toEqual({
       ConsistentRead: true,
-      ExpressionAttributeValues: { ":resourceId": "transaction/2000-11" },
-      KeyConditionExpression: "resourceId = :resourceId",
+      KeyConditionExpression: "PK = :partitionKey and begins_with(SK, :type)",
+      ExpressionAttributeValues: {
+        ":partitionKey": "2000-11",
+        ":type": "txn"
+      },
       TableName: "test_table"
     })
   })

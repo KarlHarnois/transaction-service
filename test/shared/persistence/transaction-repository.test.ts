@@ -22,9 +22,9 @@ describe("PersistedTransactionRepository", () => {
       expect(dataSource.queries[0].toInput()).toMatchObject({
         TableName: "test_table",
         ConsistentRead: false,
-        KeyConditionExpression: "sortKey = :sortKey",
+        KeyConditionExpression: "SK = :sortKey",
         ExpressionAttributeValues: {
-          ":sortKey": "id/1234"
+          ":sortKey": "1234"
         }
       })
     })
@@ -73,18 +73,18 @@ describe("PersistedTransactionRepository", () => {
             Put: {
               TableName: "test_table",
               Item: {
-                resourceId: "transaction/1970-1",
-                sortKey: "id/4444",
-                id: "4444",
-                category: "Food",
-                centAmount: expect.any(Number),
-                currency: expect.any(String),
-                currencyCentAmount: expect.any(Number),
-                description: expect.any(String),
-                fullDescription: expect.any(String),
-                timestamps: {
-                  authorizedAt: 1640482950,
-                  updatedAt: expect.any(Number),
+                PK: "1970-1",
+                SK: "4444",
+                jsonObject: {
+                  category: "Food",
+                  centAmount: expect.any(Number),
+                  currency: expect.any(String),
+                  currencyCentAmount: expect.any(Number),
+                  description: expect.any(String),
+                  fullDescription: expect.any(String),
+                  timestamps: {
+                    authorizedAt: 1640482950
+                  }
                 }
               }
             }
