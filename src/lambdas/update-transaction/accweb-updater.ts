@@ -2,7 +2,6 @@ import { TransactionRepository } from "@shared/persistence/transaction-repositor
 import { AccwebUpdatePayload } from "@shared/networking/transaction-service-client"
 import { TransactionParser } from "./transaction-parser"
 import { allMiddlewares } from "./transaction-parser-middlewares"
-import { Transaction } from "@shared/types"
 import { map } from "./categories"
 
 export class AccwebUpdater {
@@ -14,8 +13,7 @@ export class AccwebUpdater {
 
   async process(payload: AccwebUpdatePayload) {
     const parser = this.createParser(payload)
-    const parsedTransaction = parser.parseSingle(payload.transaction)
-    const transaction = await this.mergeWithPreviousVersion(parsedTransaction)
+    const transaction = parser.parseSingle(payload.transaction)
     this.repo.persist(transaction)
     return transaction
   }
@@ -26,18 +24,5 @@ export class AccwebUpdater {
       categoryMap: map,
       middlewares: allMiddlewares
     })
-  }
-
-  private async mergeWithPreviousVersion(transaction: Transaction): Promise<Transaction> {
-    const previousVersion = await this.repo.find(transaction.id)
-
-    if (previousVersion) {
-      return {
-        ...transaction,
-        isExpensed: previousVersion.isExpensed
-      }
-    } else {
-      return transaction
-    }
   }
 }
