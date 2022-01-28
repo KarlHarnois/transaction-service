@@ -9,7 +9,7 @@ export class IdGenerator {
     return `act_${transaction.identifiant}`
   }
 
-  generateAccwebImportId(index: number) {
-    return `imp_${index}`
+  generateAccwebImportId(number: number) {
+    return `imp_${number}`
   }
 }

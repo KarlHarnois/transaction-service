@@ -14,6 +14,11 @@ export interface AccwebUpdatePayload extends TransactionUpdatePayload {
   transaction: AccwebTransaction
 }
 
+export interface CreateAccwebImportPayload {
+  sourceName: string
+  transactions: AccwebTransaction[]
+}
+
 export class TransactionServiceClient {
   private readonly props
 
