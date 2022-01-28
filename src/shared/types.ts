@@ -33,6 +33,11 @@ export interface Credentials {
   questions: DefiQuestion[]
 }
 
+export interface AccwebImport {
+  id: string
+  number: number
+}
+
 export interface AccwebTransaction {
   identifiant: string
   numeroSequence: string

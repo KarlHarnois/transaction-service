@@ -15,7 +15,6 @@ export class DataStack extends core.Stack {
     // Check /docs/table-design.md for more info.
     this.addGSI({ number: 1, partitionKey: "SK" })
     this.addGSI({ number: 2, partitionKey: "transactionId", sortKey: "SK" })
-    this.addGSI({ number: 3, partitionKey: "importId", sortKey: "PK" })
 
     new core.CfnOutput(this, "TableName", {
       value: this.table.tableName
