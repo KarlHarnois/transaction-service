@@ -14,10 +14,7 @@ export interface Transaction {
   currencyCentAmount: number
   source: TransactionSource,
   timestamps: {
-    created_at?: number,
-    updatedAt?: number,
     authorizedAt: number,
-    deleted_at?: number,
     postedAt: number
   }
 }
