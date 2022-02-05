@@ -1,8 +1,8 @@
-import { IngestionValidator } from "@shared/validation/ingestion-validator"
+import { ImportValidator } from "@shared/validation/import-validator"
 import * as factories from "../../factories"
 
-describe("IngestionValidator", () => {
-  const subject = new IngestionValidator()
+describe("ImportValidator", () => {
+  const subject = new ImportValidator()
 
   describe("validate", () => {
     it("returns all duplicate ids", () => {

@@ -10,7 +10,12 @@ export class MockDataSource implements DataSource {
 
   async performQuery(query: Query) {
     this.queries.push(query)
-    return { items: this.transactions }
+
+    return {
+      items: this.transactions.map(transaction => {
+        return { jsonObject: transaction }
+      })
+    }
   }
 
   async performMutation(mutation: Mutation) {

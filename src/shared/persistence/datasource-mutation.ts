@@ -23,22 +23,15 @@ export class PersistTransaction implements Mutation {
 
   private get transactItem(): TransactWriteItem {
     const transaction = this.props.transaction
-    const now = Date.now()
-    const createdAt = transaction.timestamps.created_at || now
     const authorizedAt = new Date(transaction.timestamps.authorizedAt)
 
     return {
       Put: {
         TableName: this.props.tableName,
         Item: {
-          ...transaction,
-          resourceId: `transaction/${authorizedAt.getFullYear()}-${authorizedAt.getMonth() + 1}`,
-          sortKey: `id/${transaction.id}`,
-          timestamps: {
-            ...transaction.timestamps,
-            createdAt: createdAt,
-            updatedAt: now
-          }
+          PK: `${authorizedAt.getFullYear()}-${authorizedAt.getMonth() + 1}`,
+          SK: transaction.id,
+          jsonObject: transaction
         } as any
       }
     }

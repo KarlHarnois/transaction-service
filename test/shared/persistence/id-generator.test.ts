@@ -1,13 +1,22 @@
 import { IdGenerator } from "@shared/persistence/id-generator"
-import * as fixtures from "../../fixtures"
+import * as factories from "../../factories"
 
 describe("IdGenerator", () => {
-  describe("generateId", () => {
-    it("generates Accweb transaction ids", () => {
-      const transaction = fixtures.accwebTransactions[0]
-      const generator = new IdGenerator()
-      const id = generator.generateId(transaction)
-      expect(id).toEqual("txn_133591027536626244433877038067")
-    })
+  const subject = new IdGenerator()
+  const accwebTransaction = factories.createAccwebTransaction({ identifiant: "12345" })
+
+  it("generates transaction ids", () => {
+    const id = subject.generateTransactionId(accwebTransaction)
+    expect(id).toEqual("txn_12345")
+  })
+
+  it("generates accweb transaction ids", () => {
+    const id = subject.generateAccwebTransactionId(accwebTransaction)
+    expect(id).toEqual("act_12345")
+  })
+
+  it("generates accweb import ids", () => {
+    const id = subject.generateAccwebImportId(1)
+    expect(id).toEqual("imp_1")
   })
 })

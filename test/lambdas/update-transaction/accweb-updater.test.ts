@@ -36,22 +36,5 @@ describe("AccwebUpdater", () => {
         }
       ])
     })
-
-    describe("when a transaction with the same id already exists", () => {
-      beforeEach(() => {
-        const existingVersion = factories.createTransaction({ id: "txn_37561336141111237231129609267", isExpensed: true })
-        repo.transactions.push(existingVersion)
-      })
-
-      it("updates the description", async () => {
-        await process()
-        expect(repo.transactions.map(t => t.description)).toEqual(["Centre De Jeux Expedit"])
-      })
-
-      it("does not override the expensed flag", async () => {
-        await process()
-        expect(repo.transactions.map(t => t.isExpensed)).toEqual([true])
-      })
-    })
   })
 })

@@ -19,8 +19,8 @@ describe("TransactionParser", () => {
 
     it("parses the ids", () => {
       expect(transactions.map(t => t.id)).toEqual([
-        "txn_133591027536626244433877038067",
-        "txn_37561336141111237231129609267"
+        "txn_id-1",
+        "txn_id-2"
       ])
     })
 
@@ -38,10 +38,6 @@ describe("TransactionParser", () => {
 
     it("parses the currency amounts", () => {
       expect(transactions.map(t => t.currencyCentAmount)).toEqual([15026, 6666])
-    })
-
-    it("sets the expensed flag to false", () => {
-      expect(transactions.map(t => t.isExpensed)).toEqual([false, false])
     })
 
     it("parses the descriptions", () => {

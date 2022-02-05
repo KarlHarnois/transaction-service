@@ -2,8 +2,8 @@ import { env, chunk } from "@shared/utils"
 import { AuthToken } from "@shared/auth-token"
 import { TransactionServiceClient } from "@shared/networking/transaction-service-client"
 import { AccwebTransaction, Transaction } from "@shared/types"
+import { ImportValidator } from "@shared/validation/import-validator"
 import * as fs from "fs"
-import { IngestionValidator } from "@shared/validation/ingestion-validator"
 
 require("dotenv").config({ path: ".envrc" })
 
@@ -121,7 +121,7 @@ readTransactions()
       console.log(`Error for transaction ${error.accwebIdentifier}: ${error.error}`)
     })
 
-    const output = new IngestionValidator()
+    const output = new ImportValidator()
       .validate(summary.successes.flatMap(s => s.transaction))
       .errors
       .forEach(error => console.log(error.message))

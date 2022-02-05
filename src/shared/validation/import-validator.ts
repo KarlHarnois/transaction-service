@@ -1,12 +1,12 @@
 import { Transaction } from "@shared/types"
 
-export class IngestionOutput {
+export class ImportValidatorOutput {
   errors: Error[]
 }
 
-export class IngestionValidator {
-  validate(transactions: Transaction[]): IngestionOutput {
-    let output: IngestionOutput = { errors: [] }
+export class ImportValidator {
+  validate(transactions: Transaction[]): ImportValidatorOutput {
+    let output: ImportValidatorOutput = { errors: [] }
 
     this.validateIds(transactions).forEach(error => {
       output.errors.push(error)

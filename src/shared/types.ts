@@ -13,7 +13,6 @@ export interface Transaction {
   currency: string
   currencyCentAmount: number
   source: TransactionSource,
-  isExpensed: boolean,
   timestamps: {
     created_at?: number,
     updatedAt?: number,
@@ -32,6 +31,11 @@ export interface Credentials {
   cardNumber: string
   password: string
   questions: DefiQuestion[]
+}
+
+export interface AccwebImport {
+  id: string
+  number: number
 }
 
 export interface AccwebTransaction {

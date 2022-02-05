@@ -54,7 +54,7 @@ export class PersistedTransactionRepository implements TransactionRepository {
       id: id
     })
     const result = await this.props.dataSource.performQuery(query)
-    return result.items[0]
+    return result.items[0]?.jsonObject
   }
 
   async findMany(args: { year: number, month: number }) {
@@ -63,7 +63,7 @@ export class PersistedTransactionRepository implements TransactionRepository {
       ...args
     })
     const result = await this.props.dataSource.performQuery(query)
-    return result.items
+    return result.items.map(item => item.jsonObject)
   }
 
   async persist(transaction: Transaction) {

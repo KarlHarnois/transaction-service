@@ -15,7 +15,7 @@
     "cdk": "cdk",
     "token:gen": "ts-node -r tsconfig-paths/register bin/generate-auth-token",
     "accweb:download": "tsc && ts-node -r tsconfig-paths/register bin/download-accweb-transactions",
-    "accweb:ingest": "tsc && ts-node -r tsconfig-paths/register bin/ingest-accweb-transactions",
+    "accweb:import": "tsc && ts-node -r tsconfig-paths/register bin/import-accweb-transactions",
     "staging:deploy": "npm run build && APPLICATION_ENV=Staging npm run cdk deploy Transaction*",
     "production:deploy": "npm run build && APPLICATION_ENV=Production npm run cdk deploy Transaction*",
     "staging:destroy": "APPLICATION_ENV=Staging npm run cdk destroy Transaction*"
@@ -26,7 +26,6 @@
     "@types/jest": "^26.0.10",
     "@types/jsonwebtoken": "^8.5.5",
     "@types/node": "10.17.27",
-    "@types/string-hash": "^1.1.1",
     "aws-cdk": "1.129.0",
     "esbuild": "^0.13.13",
     "jest": "^26.4.2",
