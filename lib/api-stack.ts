@@ -7,6 +7,7 @@ import { FetchTransactionsLambda } from "./lambdas/fetch-transactions-lambda"
 import { CreateSessionLambda } from "./lambdas/create-session-lambda"
 import { UpdateTransactionLambda } from "./lambdas/update-transaction-lambda"
 import { AuthorizeTokenLambda } from "./lambdas/authorize-token-lambda"
+import { CreateExpenseLambda } from "./lambdas/create-expense-lambda"
 
 export interface ApiStackProps extends core.AppProps {
   envName: string,
@@ -34,11 +35,8 @@ export class ApiStack extends core.Stack {
 
     new FetchTransactionsLambda(this, transactionLambdaProps)
     new UpdateTransactionLambda(this, transactionLambdaProps)
-
-    new CreateSessionLambda(this, {
-      tokenSecret: tokenSecret,
-      api: api
-    })
+    new CreateExpenseLambda(this, { tokenSecret: tokenSecret, api: api })
+    new CreateSessionLambda(this, { tokenSecret: tokenSecret, api: api })
   }
 
   private createGateway(props: ApiStackProps) {
