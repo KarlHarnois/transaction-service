@@ -5,10 +5,7 @@ import { Handler, Event } from "../handler"
 export class CreateSessionHandler extends Handler {
   private props
 
-  constructor(props: {
-    logger: Logger,
-    secret: string
-  }) {
+  constructor(props: { logger: Logger, secret: string }) {
     super(props.logger)
     this.props = props
   }

@@ -3,6 +3,7 @@ import { Logger } from "@shared/utils"
 
 export interface Event {
   body?: any
+  queryParams?: any
 }
 
 export interface Response {
@@ -42,10 +43,12 @@ export abstract class Handler {
   }
 
   private parseEvent(event: APIGatewayProxyEvent): Event {
+    const result = { queryParams: event.queryStringParameters }
+
     if (event.body) {
-      return { body: JSON.parse(event.body) }
+      return { ...result, body: JSON.parse(event.body) }
     } else {
-      return {}
+      return result
     }
   }
 }
