@@ -3,52 +3,33 @@ import { CreateAccwebImportPayload } from "@shared/networking/transaction-servic
 import { DynamoDBSource  } from "@shared/persistence/datasource"
 import { IdGenerator } from "@shared/persistence/id-generator"
 import { env, Logger } from "@shared/utils"
+import { Handler, Event } from  "../handler"
 
-const response = (status: number, body: any) => {
-  return {
-    statusCode: status,
-    headers: {},
-    body: JSON.stringify(body)
-  }
-}
+export class CreateAccwebImportHandler extends Handler {
+  private props
 
-exports.handler = async (event: any, context?: any) => {
-  const logger = new Logger()
-  const dynamodb = new DynamoDBSource(logger)
-
-  const repo = new PersistedAccwebRepository({
-    tableName: env("TABLE_NAME"),
-    dataSource: dynamodb
-  })
-
-  const handler = new Handler(repo)
-  const payload = JSON.parse(event.body)
-
-  try {
-    if ((<CreateAccwebImportPayload>payload) === undefined) {
-      throw new Error(`Invalid payload: ${payload}`)
-    } else {
-      const result = await handler.process(payload)
-      return response(201, result)
-    }
-  } catch (error) {
-    return response(500, error)
-  }
-}
-
-export class Handler {
-  private repo: AccwebRepository
-
-  constructor(repo: AccwebRepository) {
-    this.repo = repo
+  constructor(props: { logger: Logger, repo: AccwebRepository }) {
+    super(props.logger)
+    this.props = props
   }
 
-  async process(payload: CreateAccwebImportPayload) {
+  async processEvent(event: Event) {
+    const payload = this.validatePayload(event)
     const previousImport = await this.findMostRecentImport()
     const number = (previousImport?.number ?? 0) + 1
     const accwebImport = await this.persistImport(number)
     const transactions = this.repo.persistTransactions(accwebImport, payload.transactions)
-    return { import: accwebImport, transactions: transactions }
+    return this.response(201, { transactions, import: accwebImport })
+  }
+
+  private validatePayload(event: Event): CreateAccwebImportPayload {
+    const payload = event.body
+
+    if ((<CreateAccwebImportPayload>payload) !== undefined) {
+      return payload
+    } else {
+      throw new Error(`Invalid payload: ${payload}`)
+    }
   }
 
   private async persistImport(number: number) {
@@ -64,4 +45,21 @@ export class Handler {
       return (previous.number > current.number) ? previous : current
     })
   }
+
+  private get repo() {
+    return this.props.repo
+  }
+}
+
+exports.handler = async (event: any, context?: any) => {
+  const logger = new Logger()
+  const dynamodb = new DynamoDBSource(logger)
+
+  const repo = new PersistedAccwebRepository({
+    tableName: env("TABLE_NAME"),
+    dataSource: dynamodb
+  })
+
+  const handler = new CreateAccwebImportHandler({ logger, repo })
+  return await handler.call(event)
 }
