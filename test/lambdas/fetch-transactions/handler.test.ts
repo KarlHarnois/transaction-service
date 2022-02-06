@@ -3,7 +3,7 @@ import { PersistedTransactionRepository } from "@shared/persistence/transaction-
 import * as factories from "../../factories"
 import * as mocks from "../../mocks"
 
-describe("FetchTransactionHandler", () => {
+describe("FetchTransactionsHandler", () => {
   let subject: FetchTransactionsHandler
   let datasource: mocks.MockDataSource
 
