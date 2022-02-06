@@ -8,10 +8,7 @@ import { Handler, Event } from "../handler"
 export class UpdateTransactionHandler extends Handler {
   private props
 
-  constructor(props: {
-    logger: Logger,
-    repo: TransactionRepository
-  }) {
+  constructor(props: { logger: Logger, repo: TransactionRepository }) {
     super(props.logger)
     this.props = props
   }
