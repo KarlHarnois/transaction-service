@@ -1,26 +1,30 @@
 import { AuthToken } from "@shared/auth-token"
-import { APIGatewayProxyEvent } from "aws-lambda"
-import { env } from "@shared/utils"
+import { env, Logger } from "@shared/utils"
+import { Handler, Event } from "../handler"
 
-exports.handler = async (event: APIGatewayProxyEvent, context?: any) => {
-  try {
+export class CreateSessionHandler extends Handler {
+  private props
+
+  constructor(props: {
+    logger: Logger,
+    secret: string
+  }) {
+    super(props.logger)
+    this.props = props
+  }
+
+  async processEvent(event: Event) {
     const token = new AuthToken({})
 
-    const session = {
+    return this.response(201, {
       expiration: token.expiration,
-      token: token.encode(env("AUTH_TOKEN_SECRET"))
-    }
-
-    return response(200, session)
-  } catch (error) {
-    return response(500, error)
+      token: token.encode(this.props.secret)
+    })
   }
 }
 
-const response = (status: number, body: any) => {
-  return {
-    statusCode: status,
-    headers: {},
-    body: JSON.stringify(body)
-  }
+exports.handler = async (event: any, context?: any) => {
+  const logger = new Logger()
+  const handler = new CreateSessionHandler({ logger, secret: env("AUTH_TOKEN_SECRET") })
+  return await handler.call(event)
 }
