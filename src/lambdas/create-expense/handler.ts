@@ -1,23 +1,19 @@
 import { Logger } from "@shared/utils"
-import { APIGatewayProxyEvent } from "aws-lambda"
+import { CreateExpenseLambda } from "lib/lambdas/create-expense-lambda"
+import { Handler, Event, Response } from "../handler"
 
-const response = (status: number, body: any) => {
-  return {
-    statusCode: status,
-    headers: {},
-    body: JSON.stringify(body)
+export class CreateExpenseHandler extends Handler {
+  constructor(props: { logger: Logger }) {
+    super(props.logger)
+  }
+
+  async processEvent(event: Event) {
+    return this.response(200, {})
   }
 }
 
-exports.handler = async (event: APIGatewayProxyEvent, context?: any) => {
+exports.handler = async (event: any, context?: any) => {
   const logger = new Logger()
-  logger.logEvent({ category: "LAMBDA_EVENT", payload: event })
-
-  try {
-    return response(201, {})
-  } catch (error) {
-    const errorMessage = (<Error>error).message
-    logger.logEvent({ category: "ERROR", payload: { message: errorMessage } })
-    return response(500, { message: errorMessage })
-  }
+  const handler = new CreateExpenseHandler({ logger })
+  return await handler.call(event)
 }
