@@ -19,6 +19,12 @@ export interface Transaction {
   }
 }
 
+export interface Expense {
+  id: string
+  transactionId: string
+  centAmount: number
+}
+
 export interface DefiQuestion {
   rawValue: string
   answer: string

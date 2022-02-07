@@ -18,8 +18,8 @@ export class FetchTransactionsHandler extends Handler {
   }
 
   private monthYear(event: Event) {
-    const year = event.queryParams?.year
-    const month = event.queryParams?.month
+    const year = event.queryStringParameters?.year
+    const month = event.queryStringParameters?.month
 
     if (!year) {
       throw new Error('Missing "year" query parameter')

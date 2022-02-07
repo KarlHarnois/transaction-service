@@ -14,7 +14,7 @@ describe("FetchTransactionsHandler", () => {
 
   const processEvent = async () => {
     return await subject.processEvent({
-      queryParams: {
+      queryStringParameters: {
         year: 2000,
         month: 11
       }
@@ -23,7 +23,7 @@ describe("FetchTransactionsHandler", () => {
 
   beforeEach(() => {
     datasource = new mocks.MockDataSource()
-    datasource.transactions = transactions
+    datasource.jsonObjects = transactions
 
     const logger = new mocks.MockLogger()
     const repo = new PersistedTransactionRepository({

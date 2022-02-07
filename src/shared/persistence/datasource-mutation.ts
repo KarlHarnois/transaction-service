@@ -1,5 +1,5 @@
 import { TransactWriteItemsInput, TransactWriteItem } from "aws-sdk/clients/dynamodb"
-import { Transaction } from "@shared/types"
+import { Transaction, Expense } from "@shared/types"
 
 export interface Mutation {
   toInput(): TransactWriteItemsInput
@@ -34,6 +34,20 @@ export class PersistTransaction implements Mutation {
           jsonObject: transaction
         } as any
       }
+    }
+  }
+}
+
+export class PersistExpense implements Mutation {
+  private readonly props
+
+  constructor(props: { tableName: string, expense: Expense }) {
+    this.props = props
+  }
+
+  toInput(): TransactWriteItemsInput {
+    return {
+      TransactItems: []
     }
   }
 }

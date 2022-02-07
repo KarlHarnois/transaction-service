@@ -1,9 +1,8 @@
-import { APIGatewayProxyEvent } from "aws-lambda"
 import { Logger } from "@shared/utils"
 
 export interface Event {
   body?: any
-  queryParams?: any
+  queryStringParameters?: any
 }
 
 export interface Response {
@@ -21,16 +20,16 @@ export abstract class Handler {
 
   abstract processEvent(event: Event): Promise<Response>
 
-  async call(event: APIGatewayProxyEvent) {
+  async call(event: Event) {
     this.logger.logEvent({ category: "LAMBDA_EVENT", payload: event })
 
     try {
-      const response = await this.processEvent(this.parseEvent(event))
+      const response = await this.processEvent(this.parseBody(event))
       return response
     } catch(error) {
       this.logger.logEvent({ category: "ERROR", payload: error })
       const errorMessage = (<Error>error).message
-      return this.response(500, { message: errorMessage })
+      return this.response(500, { error: { message: errorMessage }})
     }
   }
 
@@ -42,13 +41,21 @@ export abstract class Handler {
     }
   }
 
-  private parseEvent(event: APIGatewayProxyEvent): Event {
-    const result = { queryParams: event.queryStringParameters }
+  validateBody<A>(event: Event): A {
+    const payload = event.body
 
-    if (event.body) {
-      return { ...result, body: JSON.parse(event.body) }
+    if ((<A>payload) !== undefined) {
+      return payload
     } else {
-      return result
+      throw new Error(`Invalid payload: ${payload}`)
+    }
+  }
+
+  private parseBody(event: Event): Event {
+    if (event.body) {
+      return { ...event, body: JSON.parse(event.body) }
+    } else {
+      return event
     }
   }
 }
