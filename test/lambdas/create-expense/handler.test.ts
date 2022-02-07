@@ -1,5 +1,7 @@
 import { CreateExpenseHandler } from "@lambdas/create-expense/handler"
+import * as factories from "../../factories"
 import * as queries from "@shared/persistence/datasource-query"
+import * as mutations from "@shared/persistence/datasource-mutation"
 import * as mocks from "../../mocks"
 
 describe("CreateExpenseHandler", () => {
@@ -23,7 +25,7 @@ describe("CreateExpenseHandler", () => {
         })
       }
 
-      describe("when transaction does not exist", () => {
+      describe("when transaction does not xist", () => {
         it("returns the correct status code", async () => {
           const response = await subject.call(event)
           expect(response.statusCode).toEqual(500)
@@ -43,8 +45,19 @@ describe("CreateExpenseHandler", () => {
       })
 
       describe("when transaction exists", () => {
+        const expense = expect.objectContaining({
+          id: expect.stringContaining("exp_"),
+          centAmount: 5000,
+          transactionDetails: {
+            id: "txn_123456",
+            authorizedAt: 1640304000000
+          }
+        })
+
         beforeEach(() => {
-          dataSource.jsonObjects = [{ id: "txn_123456" }]
+          const timestamps = { authorizedAt: 1640304000000 }
+          const transaction = factories.createTransaction({ id: "txn_123456", timestamps })
+          dataSource.jsonObjects = [transaction]
         })
 
         it("returns the correct status code", async () => {
@@ -53,9 +66,15 @@ describe("CreateExpenseHandler", () => {
         })
 
         it("creates an expense", async () => {
+          await subject.call(event)
+          const expected = new mutations.PersistExpense({ tableName: "testTable", expense })
+          expect(dataSource.mutations).toEqual([expected])
         })
 
         it("returns the created expense", async () => {
+          const response = await subject.call(event)
+          const body = JSON.parse(response.body)
+          expect(body).toEqual({ expense })
         })
       })
     })

@@ -2,10 +2,14 @@ import { env, Logger } from "@shared/utils"
 import { DataSource, DynamoDBSource } from "@shared/persistence/datasource"
 import { Handler, Event } from "../handler"
 import { PersistedTransactionRepository } from "@shared/persistence/transaction-repository"
+import { PersistedExpenseRepository } from "@shared/persistence/expense-repository"
+import { Expense, Transaction } from "@shared/types"
+import { IdGenerator } from "@shared/persistence/id-generator"
 
 interface CreateExpensePayload {
   expense: {
     transactionId: string
+    centAmount: number
   }
 }
 
@@ -23,18 +27,40 @@ export class CreateExpenseHandler extends Handler {
 
   async processEvent(event: Event) {
     const payload: CreateExpensePayload = this.validateBody(event)
-    await this.validateTransactionExists(payload.expense.transactionId)
-    return this.response(201, {})
-  }
-
-  private async validateTransactionExists(id: string) {
-    const transaction = await this.findTransaction(id)
-    if (!transaction) throw new Error(`Transaction with id ${id} not found.`)
+    const transaction = await this.findTransaction(payload.expense.transactionId)
+    const expense = this.buildExpense(payload, transaction)
+    await this.persistExpense(expense)
+    return this.response(201, { expense })
   }
 
   private async findTransaction(id: string) {
     const repo = new PersistedTransactionRepository(this.props)
-    return await repo.find(id)
+    const transaction = await repo.find(id)
+
+    if (<Transaction>transaction) {
+      return transaction
+    } else {
+      throw new Error(`Transaction with id ${id} not found.`)
+    }
+  }
+
+  private buildExpense(payload: CreateExpensePayload, transaction: Transaction): Expense {
+    const generator = new IdGenerator()
+    const params = payload.expense
+
+    return {
+      id: generator.generateExpenseId(),
+      centAmount: params.centAmount,
+      transactionDetails: {
+        id: params.transactionId,
+        authorizedAt: transaction.timestamps.authorizedAt
+      }
+    }
+  }
+
+  private async persistExpense(expense: Expense) {
+    const repo = new PersistedExpenseRepository(this.props)
+    return await repo.persist(expense)
   }
 }
 

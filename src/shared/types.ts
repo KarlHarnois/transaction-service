@@ -21,8 +21,11 @@ export interface Transaction {
 
 export interface Expense {
   id: string
-  transactionId: string
   centAmount: number
+  transactionDetails: {
+    id: string,
+    authorizedAt: number
+  }
 }
 
 export interface DefiQuestion {
