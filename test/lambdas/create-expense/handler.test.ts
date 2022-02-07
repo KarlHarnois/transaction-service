@@ -23,7 +23,7 @@ describe("CreateExpenseHandler", () => {
         })
       }
 
-      describe("when transaction does not exits", () => {
+      describe("when transaction does not exist", () => {
         it("returns the correct status code", async () => {
           const response = await subject.call(event)
           expect(response.statusCode).toEqual(500)
