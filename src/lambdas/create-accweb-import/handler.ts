@@ -14,22 +14,12 @@ export class CreateAccwebImportHandler extends Handler {
   }
 
   async processEvent(event: Event) {
-    const payload = this.validatePayload(event)
+    const payload: CreateAccwebImportPayload = this.validateBody(event)
     const previousImport = await this.findMostRecentImport()
     const number = (previousImport?.number ?? 0) + 1
     const accwebImport = await this.persistImport(number)
     const transactions = this.repo.persistTransactions(accwebImport, payload.transactions)
     return this.response(201, { transactions, import: accwebImport })
-  }
-
-  private validatePayload(event: Event): CreateAccwebImportPayload {
-    const payload = event.body
-
-    if ((<CreateAccwebImportPayload>payload) !== undefined) {
-      return payload
-    } else {
-      throw new Error(`Invalid payload: ${payload}`)
-    }
   }
 
   private async persistImport(number: number) {
