@@ -19,6 +19,7 @@ export class ApiStack extends core.Stack {
     super(scope, id, props)
     const api = this.createGateway(props)
     const transactionsResource = api.root.addResource("transactions")
+    const transactionByIdResource = transactionsResource.addResource("{id}")
     const tokenSecret = this.getTokenSecret()
 
     const authLambda = new AuthorizeTokenLambda(this, {
@@ -35,7 +36,7 @@ export class ApiStack extends core.Stack {
 
     new FetchTransactionsLambda(this, transactionLambdaProps)
     new UpdateTransactionLambda(this, transactionLambdaProps)
-    new CreateExpenseLambda(this, { tokenSecret: tokenSecret, api: api })
+    new CreateExpenseLambda(this, { tokenSecret: tokenSecret, table: props.table, transactionByIdResource })
     new CreateSessionLambda(this, { tokenSecret: tokenSecret, api: api })
   }
 

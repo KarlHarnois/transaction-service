@@ -3,6 +3,7 @@ import { Logger } from "@shared/utils"
 export interface Event {
   body?: any
   queryStringParameters?: any
+  pathParameters?: { id?: string }
 }
 
 export interface Response {
