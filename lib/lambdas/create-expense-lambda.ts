@@ -15,6 +15,7 @@ export class CreateExpenseLambda {
     const lambda = this.createLambda(scope, props)
     const integration = this.createIntegration(lambda)
     const method = this.createMethod(integration, props)
+    props.table.grantReadWriteData(lambda)
   }
 
   private createLambda(scope: core.Construct, props: CreateExpenseLambdaProps) {
