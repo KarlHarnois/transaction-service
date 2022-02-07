@@ -42,14 +42,16 @@ export abstract class Handler {
     }
   }
 
+  validatePathId(event: Event): string {
+    const id = event.pathParameters?.id
+    if (id) return id
+    throw new Error("Path id not found.")
+  }
+
   validateBody<A>(event: Event): A {
     const payload = event.body
-
-    if ((<A>payload) !== undefined) {
-      return payload
-    } else {
-      throw new Error(`Invalid payload: ${payload}`)
-    }
+    if ((<A>payload) !== undefined) return payload
+    throw new Error(`Invalid payload: ${payload}`)
   }
 
   private parseBody(event: Event): Event {

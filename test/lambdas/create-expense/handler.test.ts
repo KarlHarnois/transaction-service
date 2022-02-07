@@ -17,9 +17,11 @@ describe("CreateExpenseHandler", () => {
   describe("call", () => {
     describe("when payload is valid", () => {
       const event = {
+        pathParameters: {
+          id: "txn_123456"
+        },
         body: JSON.stringify({
           expense: {
-            transactionId: "txn_123456",
             centAmount: 5000
           }
         })

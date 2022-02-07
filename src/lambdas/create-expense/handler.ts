@@ -8,7 +8,6 @@ import { IdGenerator } from "@shared/persistence/id-generator"
 
 interface CreateExpensePayload {
   expense: {
-    transactionId: string
     centAmount: number
   }
 }
@@ -27,7 +26,8 @@ export class CreateExpenseHandler extends Handler {
 
   async processEvent(event: Event) {
     const payload: CreateExpensePayload = this.validateBody(event)
-    const transaction = await this.findTransaction(payload.expense.transactionId)
+    const transactionId = this.validatePathId(event)
+    const transaction = await this.findTransaction(transactionId)
     const expense = this.buildExpense(payload, transaction)
     await this.persistExpense(expense)
     return this.response(201, { expense })
@@ -36,12 +36,8 @@ export class CreateExpenseHandler extends Handler {
   private async findTransaction(id: string) {
     const repo = new PersistedTransactionRepository(this.props)
     const transaction = await repo.find(id)
-
-    if (<Transaction>transaction) {
-      return transaction
-    } else {
-      throw new Error(`Transaction with id ${id} not found.`)
-    }
+    if (<Transaction>transaction) return transaction
+    throw new Error(`Transaction with id ${id} not found.`)
   }
 
   private buildExpense(payload: CreateExpensePayload, transaction: Transaction): Expense {
@@ -52,7 +48,7 @@ export class CreateExpenseHandler extends Handler {
       id: generator.generateExpenseId(),
       centAmount: params.centAmount,
       transactionDetails: {
-        id: params.transactionId,
+        id: transaction.id,
         authorizedAt: transaction.timestamps.authorizedAt
       }
     }
