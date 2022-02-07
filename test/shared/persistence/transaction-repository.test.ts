@@ -31,7 +31,7 @@ describe("PersistedTransactionRepository", () => {
 
     describe("when queried transaction is not persisted yet", () => {
       beforeEach(() => {
-        dataSource.transactions = []
+        dataSource.jsonObjects = []
       })
 
       it("returns nothing", async () => {
@@ -44,7 +44,7 @@ describe("PersistedTransactionRepository", () => {
       const transaction = factories.createTransaction({})
 
       beforeEach(() => {
-        dataSource.transactions = [transaction]
+        dataSource.jsonObjects = [transaction]
       })
 
       it("returns the transaction", async () => {

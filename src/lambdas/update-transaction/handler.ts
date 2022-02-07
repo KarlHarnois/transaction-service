@@ -1,40 +1,35 @@
-import { PersistedTransactionRepository } from "@shared/persistence/transaction-repository"
+import { PersistedTransactionRepository, TransactionRepository } from "@shared/persistence/transaction-repository"
 import { DynamoDBSource  } from "@shared/persistence/datasource"
 import { AccwebUpdater } from "./accweb-updater"
 import { env, Logger } from "@shared/utils"
 import { AccwebUpdatePayload } from "@shared/networking/transaction-service-client"
+import { Handler, Event } from "../handler"
 
-const response = (status: number, body: any) => {
-  return {
-    statusCode: status,
-    headers: {},
-    body: JSON.stringify(body)
+export class UpdateTransactionHandler extends Handler {
+  private props
+
+  constructor(props: { logger: Logger, repo: TransactionRepository }) {
+    super(props.logger)
+    this.props = props
+  }
+
+  async processEvent(event: Event) {
+    const updater = new AccwebUpdater({ repo: this.props.repo })
+    const payload: AccwebUpdatePayload = this.validateBody(event)
+    const transaction = await updater.process(payload)
+    return this.response(200, { transaction })
   }
 }
 
 exports.handler = async (event: any, context?: any) => {
   const logger = new Logger()
-  logger.logEvent({ category: "LAMBDA_EVENT", payload: event })
+  const dynamodb = new DynamoDBSource(logger)
 
-  try {
-    const dynamodb = new DynamoDBSource(logger)
+  const repo = new PersistedTransactionRepository({
+    tableName: env("TABLE_NAME"),
+    dataSource: dynamodb
+  })
 
-    const repo = new PersistedTransactionRepository({
-      tableName: env("TABLE_NAME"),
-      dataSource: dynamodb
-    })
-
-    const updater = new AccwebUpdater({ repo: repo })
-    const payload = JSON.parse(event.body)
-
-    if ((<AccwebUpdatePayload>payload) !== undefined) {
-      const transaction = await updater.process(payload)
-      return response(200, { transaction: transaction })
-    } else {
-      throw new Error(`Invalid payload: ${payload}`)
-    }
-  } catch (error) {
-    logger.logEvent({ category: "ERROR", payload: error })
-    return response(500, { message: (<Error>error).message })
-  }
+  const handler = new UpdateTransactionHandler({ logger, repo })
+  return await handler.call(event)
 }

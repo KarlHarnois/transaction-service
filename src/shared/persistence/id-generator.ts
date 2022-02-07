@@ -1,4 +1,5 @@
 import { AccwebTransaction } from "@shared/types"
+import * as uuid from "uuid"
 
 export class IdGenerator {
   generateTransactionId(transaction: AccwebTransaction) {
@@ -11,5 +12,9 @@ export class IdGenerator {
 
   generateAccwebImportId(number: number) {
     return `imp_${number}`
+  }
+
+  generateExpenseId() {
+    return `exp_${uuid.v4()}`
   }
 }

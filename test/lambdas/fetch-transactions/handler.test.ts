@@ -1,10 +1,10 @@
-import { Handler } from "@lambdas/fetch-transactions/handler"
+import { FetchTransactionsHandler } from "@lambdas/fetch-transactions/handler"
 import { PersistedTransactionRepository } from "@shared/persistence/transaction-repository"
 import * as factories from "../../factories"
 import * as mocks from "../../mocks"
 
-describe("Handler", () => {
-  let subject: Handler
+describe("FetchTransactionsHandler", () => {
+  let subject: FetchTransactionsHandler
   let datasource: mocks.MockDataSource
 
   const transactions = [
@@ -12,8 +12,8 @@ describe("Handler", () => {
     factories.createTransaction({ id: 4567 })
   ]
 
-  const process = async () => {
-    return await subject.process({
+  const processEvent = async () => {
+    return await subject.processEvent({
       queryStringParameters: {
         year: 2000,
         month: 11
@@ -23,23 +23,29 @@ describe("Handler", () => {
 
   beforeEach(() => {
     datasource = new mocks.MockDataSource()
-    datasource.transactions = transactions
+    datasource.jsonObjects = transactions
 
+    const logger = new mocks.MockLogger()
     const repo = new PersistedTransactionRepository({
       tableName: "test_table",
       dataSource: datasource
     })
 
-    subject = new Handler({ repo })
+    subject = new FetchTransactionsHandler({ logger, repo })
+  })
+
+  it("returns the correct status", async () => {
+    const response = await processEvent()
+    expect(response.statusCode).toEqual(200)
   })
 
   it("returns the transactions", async () => {
-    const result = await process()
-    expect(result).toEqual(transactions)
+    const response = await processEvent()
+    expect(JSON.parse(response.body).transactions).toEqual(transactions)
   })
 
   it("performs the correct query", async () => {
-    await process()
+    await processEvent()
 
     expect(datasource.queries[0].toInput()).toEqual({
       ConsistentRead: true,

@@ -41,10 +41,7 @@ export class InMemoryTransactionRepository implements TransactionRepository {
 export class PersistedTransactionRepository implements TransactionRepository {
   private readonly props
 
-  constructor(props: {
-    tableName: string,
-    dataSource: DataSource
-  }) {
+  constructor(props: { tableName: string, dataSource: DataSource }) {
     this.props = props
   }
 
