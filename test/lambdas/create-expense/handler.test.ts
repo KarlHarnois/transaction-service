@@ -15,6 +15,25 @@ describe("CreateExpenseHandler", () => {
   })
 
   describe("call", () => {
+    describe("when payload is absent", () => {
+      const event = {
+        pathParameters: {
+          id: "txn_123456"
+        }
+      }
+
+      it("returns the correct status code", async () => {
+        const response = await subject.call(event)
+        expect(response.statusCode).toEqual(500)
+      })
+
+      it("returns the correct error message", async () => {
+        const response = await subject.call(event)
+        const body = JSON.parse(response.body)
+        expect(body).toEqual({ error: { message: "Payload not found." } })
+      })
+    })
+
     describe("when payload is valid", () => {
       const event = {
         pathParameters: {

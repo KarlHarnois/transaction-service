@@ -14,8 +14,9 @@ export class UpdateTransactionHandler extends Handler {
   }
 
   async processEvent(event: Event) {
+    this.validateBodyIsPresent(event)
     const updater = new AccwebUpdater({ repo: this.props.repo })
-    const payload: AccwebUpdatePayload = this.validateBody(event)
+    const payload: AccwebUpdatePayload = event.body
     const transaction = await updater.process(payload)
     return this.response(200, { transaction })
   }

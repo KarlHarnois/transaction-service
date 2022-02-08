@@ -25,7 +25,8 @@ export class CreateExpenseHandler extends Handler {
   }
 
   async processEvent(event: Event) {
-    const payload: CreateExpensePayload = this.validateBody(event)
+    this.validateBodyIsPresent(event)
+    const payload: CreateExpensePayload = event.body
     const transactionId = this.validatePathId(event)
     const transaction = await this.findTransaction(transactionId)
     const expense = this.buildExpense(payload, transaction)
