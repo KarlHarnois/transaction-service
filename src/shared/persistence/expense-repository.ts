@@ -1,4 +1,4 @@
-import { Expense } from "@shared/types"
+import { Expense, ExpenseWithTransactionDetails } from "@shared/types"
 import { DataSource } from "./datasource"
 import * as mutations from "./datasource-mutation"
 
@@ -13,7 +13,7 @@ export class PersistedExpenseRepository implements ExpenseRepository {
     this.props = props
   }
 
-  async persist(expense: Expense) {
+  async persist(expense: ExpenseWithTransactionDetails) {
     const mutation = new mutations.PersistExpense({
       expense,
       tableName: this.props.tableName

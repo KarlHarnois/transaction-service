@@ -1,5 +1,5 @@
 import { TransactWriteItemsInput } from "aws-sdk/clients/dynamodb"
-import { Transaction, Expense } from "@shared/types"
+import { Transaction, ExpenseWithTransactionDetails } from "@shared/types"
 
 export interface Mutation {
   toInput(): TransactWriteItemsInput
@@ -37,7 +37,10 @@ export class PersistTransaction implements Mutation {
 export class PersistExpense implements Mutation {
   private readonly props
 
-  constructor(props: { tableName: string; expense: Expense }) {
+  constructor(props: {
+    tableName: string
+    expense: ExpenseWithTransactionDetails
+  }) {
     this.props = props
   }
 
