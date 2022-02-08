@@ -1,60 +1,59 @@
 import { FetchTransactionsHandler } from "@lambdas/fetch-transactions/handler"
-import { PersistedTransactionRepository } from "@shared/persistence/transaction-repository"
 import * as factories from "../../factories"
 import * as mocks from "../../mocks"
 
 describe("FetchTransactionsHandler", () => {
   let subject: FetchTransactionsHandler
-  let datasource: mocks.MockDataSource
+  let dataSource: mocks.MockDataSource
 
   const transactions = [
     factories.createTransaction({ id: 1234 }),
     factories.createTransaction({ id: 4567 })
   ]
 
-  const processEvent = async () => {
-    return await subject.processEvent({
+  beforeEach(() => {
+    const logger = new mocks.MockLogger()
+
+    dataSource = new mocks.MockDataSource()
+    dataSource.jsonObjects = transactions
+
+    subject = new FetchTransactionsHandler({
+      logger,
+      dataSource,
+      tableName: "testTable"
+    })
+  })
+
+  describe("call", () => {
+    const event = {
       queryStringParameters: {
         year: 2000,
         month: 11
       }
-    })
-  }
+    }
 
-  beforeEach(() => {
-    datasource = new mocks.MockDataSource()
-    datasource.jsonObjects = transactions
-
-    const logger = new mocks.MockLogger()
-    const repo = new PersistedTransactionRepository({
-      tableName: "test_table",
-      dataSource: datasource
+    it("returns the correct status", async () => {
+      const response = await subject.call(event)
+      expect(response.statusCode).toEqual(200)
     })
 
-    subject = new FetchTransactionsHandler({ logger, repo })
-  })
+    it("returns the transactions", async () => {
+      const response = await subject.call(event)
+      expect(JSON.parse(response.body).transactions).toEqual(transactions)
+    })
 
-  it("returns the correct status", async () => {
-    const response = await processEvent()
-    expect(response.statusCode).toEqual(200)
-  })
+    it("performs the correct query", async () => {
+      await subject.call(event)
 
-  it("returns the transactions", async () => {
-    const response = await processEvent()
-    expect(JSON.parse(response.body).transactions).toEqual(transactions)
-  })
-
-  it("performs the correct query", async () => {
-    await processEvent()
-
-    expect(datasource.queries[0].toInput()).toEqual({
-      ConsistentRead: true,
-      KeyConditionExpression: "PK = :partitionKey and begins_with(SK, :type)",
-      ExpressionAttributeValues: {
-        ":partitionKey": "2000-11",
-        ":type": "txn"
-      },
-      TableName: "test_table"
+      expect(dataSource.queries[0].toInput()).toEqual({
+        ConsistentRead: true,
+        KeyConditionExpression: "PK = :partitionKey and begins_with(SK, :type)",
+        ExpressionAttributeValues: {
+          ":partitionKey": "2000-11",
+          ":type": "txn"
+        },
+        TableName: "testTable"
+      })
     })
   })
 })
