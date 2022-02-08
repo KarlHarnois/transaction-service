@@ -15,7 +15,10 @@ export class MTGMiddleware implements Middleware {
   ]
 
   apply(transaction: Transaction): Transaction {
-    if (this.isInStoreTransaction(transaction) || this.isPaypalMtgTransaction(transaction)) {
+    if (
+      this.isInStoreTransaction(transaction) ||
+      this.isPaypalMtgTransaction(transaction)
+    ) {
       transaction.category = "Entertainment"
       transaction.subcategory = "MTG"
     }
@@ -32,7 +35,7 @@ export class MTGMiddleware implements Middleware {
     }
     let result = false
 
-    this.PAYPAL_KEYWORDS.forEach(keyword => {
+    this.PAYPAL_KEYWORDS.forEach((keyword) => {
       if (transaction.fullDescription.includes(keyword)) {
         result = true
       }

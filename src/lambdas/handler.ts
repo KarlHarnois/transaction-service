@@ -27,10 +27,10 @@ export abstract class Handler {
     try {
       const response = await this.processEvent(this.parseBody(event))
       return response
-    } catch(error) {
+    } catch (error) {
       this.logger.logEvent({ category: "ERROR", payload: error })
       const errorMessage = (<Error>error).message
-      return this.response(500, { error: { message: errorMessage }})
+      return this.response(500, { error: { message: errorMessage } })
     }
   }
 
@@ -48,10 +48,8 @@ export abstract class Handler {
     throw new Error("Path id not found.")
   }
 
-  validateBody<A>(event: Event): A {
-    const payload = event.body
-    if ((<A>payload) !== undefined) return payload
-    throw new Error(`Invalid payload: ${payload}`)
+  validateBodyIsPresent(event: Event) {
+    if (event.body === undefined) throw new Error("Payload not found.")
   }
 
   private parseBody(event: Event): Event {

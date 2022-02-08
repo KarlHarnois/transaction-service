@@ -13,7 +13,8 @@ function downloadAccwebTransactions(): Promise<AccwebTransaction[]> {
     password: env("DESJARDINS_PASSWORD"),
     questions: [
       {
-        rawValue: "Quelle est la ville/municipalité de mon premier appartement/logement?",
+        rawValue:
+          "Quelle est la ville/municipalité de mon premier appartement/logement?",
         answer: env("DESJARDINS_CITY_ANSWER")
       },
       {
@@ -21,7 +22,8 @@ function downloadAccwebTransactions(): Promise<AccwebTransaction[]> {
         answer: env("DESJARDINS_PET_ANSWER")
       },
       {
-        rawValue: "Quel est le nom de l'école que je fréquentais à ma cinquième année du secondaire?",
+        rawValue:
+          "Quel est le nom de l'école que je fréquentais à ma cinquième année du secondaire?",
         answer: env("DESJARDINS_SCHOOL_ANSWER")
       }
     ]
@@ -50,7 +52,7 @@ function storeTransactions(transactions: AccwebTransaction[]) {
 
 downloadAccwebTransactions()
   .then(storeTransactions)
-  .then(transactions => {
+  .then((transactions) => {
     console.log(`Successfully downloaded ${transactions.length} transactions`)
   })
-  .catch(err => console.log(err.message))
+  .catch((err) => console.log(err.message))

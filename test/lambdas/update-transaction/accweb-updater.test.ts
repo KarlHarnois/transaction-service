@@ -29,7 +29,7 @@ describe("AccwebUpdater", () => {
     it("uses the provided source", async () => {
       await process()
 
-      expect(repo.transactions.map(t => t.source)).toEqual([
+      expect(repo.transactions.map((t) => t.source)).toEqual([
         {
           name: "Amex",
           last4: "0000"

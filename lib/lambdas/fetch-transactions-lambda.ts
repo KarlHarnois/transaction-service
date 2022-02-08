@@ -23,13 +23,18 @@ export class FetchTransactionsLambda {
     props.table.grantReadData(lambda)
   }
 
-  private createLambda(scope: core.Construct, props: FetchTransactionsLambdaProps) {
+  private createLambda(
+    scope: core.Construct,
+    props: FetchTransactionsLambdaProps
+  ) {
     return new lambdaNodejs.NodejsFunction(scope, "FetchTransactionsLambda", {
-      entry: `${path.resolve(__dirname)}/../../src/lambdas/fetch-transactions/handler.ts`,
+      entry: `${path.resolve(
+        __dirname
+      )}/../../src/lambdas/fetch-transactions/handler.ts`,
       timeout: core.Duration.seconds(90),
       memorySize: 1024,
       environment: {
-        TABLE_NAME: props.table.tableName,
+        TABLE_NAME: props.table.tableName
       }
     })
   }
@@ -41,12 +46,15 @@ export class FetchTransactionsLambda {
         "integration.request.querystring.month": this.monthQueryParam
       },
       requestTemplates: {
-        "application/json": '{ "statusCode": "200" }',
+        "application/json": '{ "statusCode": "200" }'
       }
     })
   }
 
-  private createMethod(integration: apigateway.Integration, props: FetchTransactionsLambdaProps) {
+  private createMethod(
+    integration: apigateway.Integration,
+    props: FetchTransactionsLambdaProps
+  ) {
     return props.resource.addMethod("GET", integration, {
       authorizer: props.authorizer,
       apiKeyRequired: true,

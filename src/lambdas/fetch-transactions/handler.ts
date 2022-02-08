@@ -1,12 +1,15 @@
 import { DynamoDBSource } from "@shared/persistence/datasource"
-import { PersistedTransactionRepository, TransactionRepository } from "@shared/persistence/transaction-repository"
+import {
+  PersistedTransactionRepository,
+  TransactionRepository
+} from "@shared/persistence/transaction-repository"
 import { env, Logger } from "@shared/utils"
 import { Handler, Event } from "../handler"
 
 export class FetchTransactionsHandler extends Handler {
   private readonly props
 
-  constructor(props: { repo: TransactionRepository, logger: Logger }) {
+  constructor(props: { repo: TransactionRepository; logger: Logger }) {
     super(props.logger)
     this.props = props
   }

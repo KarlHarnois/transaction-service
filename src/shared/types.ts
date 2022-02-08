@@ -12,9 +12,9 @@ export interface Transaction {
   centAmount: number
   currency: string
   currencyCentAmount: number
-  source: TransactionSource,
+  source: TransactionSource
   timestamps: {
-    authorizedAt: number,
+    authorizedAt: number
     postedAt: number
   }
 }
@@ -23,7 +23,7 @@ export interface Expense {
   id: string
   centAmount: number
   transactionDetails: {
-    id: string,
+    id: string
     authorizedAt: number
   }
 }

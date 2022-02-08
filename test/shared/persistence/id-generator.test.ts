@@ -3,7 +3,9 @@ import * as factories from "../../factories"
 
 describe("IdGenerator", () => {
   const subject = new IdGenerator()
-  const accwebTransaction = factories.createAccwebTransaction({ identifiant: "12345" })
+  const accwebTransaction = factories.createAccwebTransaction({
+    identifiant: "12345"
+  })
 
   it("generates transaction ids", () => {
     const id = subject.generateTransactionId(accwebTransaction)

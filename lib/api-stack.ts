@@ -10,7 +10,7 @@ import { AuthorizeTokenLambda } from "./lambdas/authorize-token-lambda"
 import { CreateExpenseLambda } from "./lambdas/create-expense-lambda"
 
 export interface ApiStackProps extends core.AppProps {
-  envName: string,
+  envName: string
   table: dynamodb.Table
 }
 
@@ -36,7 +36,11 @@ export class ApiStack extends core.Stack {
 
     new FetchTransactionsLambda(this, transactionLambdaProps)
     new UpdateTransactionLambda(this, transactionLambdaProps)
-    new CreateExpenseLambda(this, { tokenSecret: tokenSecret, table: props.table, transactionByIdResource })
+    new CreateExpenseLambda(this, {
+      tokenSecret: tokenSecret,
+      table: props.table,
+      transactionByIdResource
+    })
     new CreateSessionLambda(this, { tokenSecret: tokenSecret, api: api })
   }
 
@@ -49,19 +53,22 @@ export class ApiStack extends core.Stack {
 
     api.addUsagePlan("UsagePlan", {
       apiKey: key,
-      apiStages: [{
-        api: api,
-        stage: api.deploymentStage
-      }]
+      apiStages: [
+        {
+          api: api,
+          stage: api.deploymentStage
+        }
+      ]
     })
 
     return api
   }
 
   private getTokenSecret() {
-    return secretsmanager.Secret
-      .fromSecretNameV2(this, "AuthTokenSecret", "authTokenSecret")
-      .secretValue
-      .toString()
+    return secretsmanager.Secret.fromSecretNameV2(
+      this,
+      "AuthTokenSecret",
+      "authTokenSecret"
+    ).secretValue.toString()
   }
 }

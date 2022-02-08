@@ -9,7 +9,7 @@ export interface ExpenseRepository {
 export class PersistedExpenseRepository implements ExpenseRepository {
   private readonly props
 
-  constructor(props: { tableName: string, dataSource: DataSource }) {
+  constructor(props: { tableName: string; dataSource: DataSource }) {
     this.props = props
   }
 

@@ -1,8 +1,7 @@
 import * as core from "@aws-cdk/core"
 import * as dynamodb from "@aws-cdk/aws-dynamodb"
 
-export interface DataStackProps extends core.AppProps {
-}
+export interface DataStackProps extends core.AppProps {}
 
 export class DataStack extends core.Stack {
   readonly table: dynamodb.Table
@@ -35,14 +34,18 @@ export class DataStack extends core.Stack {
     })
   }
 
-  private addGSI(args: { number: number, partitionKey: string, sortKey?: string }) {
+  private addGSI(args: {
+    number: number
+    partitionKey: string
+    sortKey?: string
+  }) {
     const props: dynamodb.GlobalSecondaryIndexProps = {
       indexName: `GSI${args.number}`,
       partitionKey: {
         name: args.partitionKey,
         type: dynamodb.AttributeType.STRING
       },
-      ... (args.sortKey && {
+      ...(args.sortKey && {
         sortKey: {
           name: args.sortKey,
           type: dynamodb.AttributeType.STRING

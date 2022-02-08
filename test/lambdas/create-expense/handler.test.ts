@@ -11,10 +11,33 @@ describe("CreateExpenseHandler", () => {
   beforeEach(() => {
     const logger = new mocks.MockLogger()
     dataSource = new mocks.MockDataSource()
-    subject = new CreateExpenseHandler({ dataSource, logger, tableName: "testTable" })
+    subject = new CreateExpenseHandler({
+      dataSource,
+      logger,
+      tableName: "testTable"
+    })
   })
 
   describe("call", () => {
+    describe("when payload is absent", () => {
+      const event = {
+        pathParameters: {
+          id: "txn_123456"
+        }
+      }
+
+      it("returns the correct status code", async () => {
+        const response = await subject.call(event)
+        expect(response.statusCode).toEqual(500)
+      })
+
+      it("returns the correct error message", async () => {
+        const response = await subject.call(event)
+        const body = JSON.parse(response.body)
+        expect(body).toEqual({ error: { message: "Payload not found." } })
+      })
+    })
+
     describe("when payload is valid", () => {
       const event = {
         pathParameters: {
@@ -36,12 +59,17 @@ describe("CreateExpenseHandler", () => {
         it("returns the correct error message", async () => {
           const response = await subject.call(event)
           const body = JSON.parse(response.body)
-          expect(body).toEqual({ error: { message: "Transaction with id txn_123456 not found." }})
+          expect(body).toEqual({
+            error: { message: "Transaction with id txn_123456 not found." }
+          })
         })
 
         it("performs the correct query", async () => {
           await subject.call(event)
-          const expected = new queries.FindSingleTransaction({ id: "txn_123456", tableName: "testTable" })
+          const expected = new queries.FindSingleTransaction({
+            id: "txn_123456",
+            tableName: "testTable"
+          })
           expect(dataSource.queries).toEqual([expected])
         })
       })
@@ -58,7 +86,10 @@ describe("CreateExpenseHandler", () => {
 
         beforeEach(() => {
           const timestamps = { authorizedAt: 1640304000000 }
-          const transaction = factories.createTransaction({ id: "txn_123456", timestamps })
+          const transaction = factories.createTransaction({
+            id: "txn_123456",
+            timestamps
+          })
           dataSource.jsonObjects = [transaction]
         })
 
@@ -69,7 +100,10 @@ describe("CreateExpenseHandler", () => {
 
         it("creates an expense", async () => {
           await subject.call(event)
-          const expected = new mutations.PersistExpense({ tableName: "testTable", expense })
+          const expected = new mutations.PersistExpense({
+            tableName: "testTable",
+            expense
+          })
           expect(dataSource.mutations).toEqual([expected])
         })
 

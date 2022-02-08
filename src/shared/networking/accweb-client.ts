@@ -1,6 +1,10 @@
 import * as playwright from "playwright"
 import { AccwebDownloadAutomation } from "./accweb-download-automation"
-import { AccwebTransaction, AccwebFinancialProduct, Credentials } from "@shared/types"
+import {
+  AccwebTransaction,
+  AccwebFinancialProduct,
+  Credentials
+} from "@shared/types"
 
 export class AccwebClient {
   private readonly credentials: Credentials
@@ -9,8 +13,13 @@ export class AccwebClient {
     this.credentials = credentials
   }
 
-  async fetchTransactions(product: AccwebFinancialProduct): Promise<AccwebTransaction[]> {
-    const browser = await playwright.chromium.launch({ headless: false, slowMo: 300 })
+  async fetchTransactions(
+    product: AccwebFinancialProduct
+  ): Promise<AccwebTransaction[]> {
+    const browser = await playwright.chromium.launch({
+      headless: false,
+      slowMo: 300
+    })
     const page = await browser.newPage()
 
     const automation = new AccwebDownloadAutomation({
@@ -24,4 +33,3 @@ export class AccwebClient {
     return transactions
   }
 }
-

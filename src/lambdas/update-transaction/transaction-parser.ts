@@ -1,5 +1,9 @@
 import { IdGenerator } from "@shared/persistence/id-generator"
-import { Transaction, TransactionSource, AccwebTransaction } from "@shared/types"
+import {
+  Transaction,
+  TransactionSource,
+  AccwebTransaction
+} from "@shared/types"
 import { Middleware } from "./transaction-parser-middlewares/middleware"
 
 export interface TransactionParserProps {
@@ -16,7 +20,7 @@ export class TransactionParser {
   }
 
   parseMany(transactions: AccwebTransaction[]): Transaction[] {
-    return transactions.map(transaction => this.parseSingle(transaction))
+    return transactions.map((transaction) => this.parseSingle(transaction))
   }
 
   parseSingle(transaction: AccwebTransaction): Transaction {
@@ -46,7 +50,7 @@ export class TransactionParser {
   private applyMiddlewares(transaction: Transaction): Transaction {
     let result = transaction
 
-    this.props.middlewares?.forEach(middleware => {
+    this.props.middlewares?.forEach((middleware) => {
       result = middleware.apply(result)
     })
 

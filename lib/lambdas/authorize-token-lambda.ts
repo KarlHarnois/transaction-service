@@ -19,9 +19,14 @@ export class AuthorizeTokenLambda {
     })
   }
 
-  private createLambda(scope: core.Construct, props: AuthorizeTokenLambdaProps) {
-    return new lambdaNodejs.NodejsFunction(scope, 'AuthorizeTokenLambda', {
-      entry: `${path.resolve(__dirname)}/../../src/lambdas/authorize-token/handler.ts`,
+  private createLambda(
+    scope: core.Construct,
+    props: AuthorizeTokenLambdaProps
+  ) {
+    return new lambdaNodejs.NodejsFunction(scope, "AuthorizeTokenLambda", {
+      entry: `${path.resolve(
+        __dirname
+      )}/../../src/lambdas/authorize-token/handler.ts`,
       timeout: core.Duration.seconds(90),
       environment: {
         REGION: core.Stack.of(scope).region,

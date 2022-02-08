@@ -22,27 +22,25 @@ export interface CreateAccwebImportPayload {
 export class TransactionServiceClient {
   private readonly props
 
-  constructor(props: {
-    baseUrl: string,
-    authToken: string,
-    apiKey: string
-  }) {
+  constructor(props: { baseUrl: string; authToken: string; apiKey: string }) {
     this.props = props
   }
 
-  updateTransaction(payload: AccwebUpdatePayload): Promise<UpdateTransactionResponse> {
+  updateTransaction(
+    payload: AccwebUpdatePayload
+  ): Promise<UpdateTransactionResponse> {
     return fetch(`${this.props.baseUrl}/transactions`, {
       method: "PUT",
       body: JSON.stringify(payload),
       headers: {
         "Content-Type": "application/json",
-        "Authorization": this.props.authToken,
+        Authorization: this.props.authToken,
         "x-api-key": this.props.apiKey
       }
     })
-    .then(this.validateResponse)
-    .then(res => res.json())
-    .then(json => json as UpdateTransactionResponse)
+      .then(this.validateResponse)
+      .then((res) => res.json())
+      .then((json) => json as UpdateTransactionResponse)
   }
 
   private async validateResponse(response: Response): Promise<Response> {
@@ -51,7 +49,9 @@ export class TransactionServiceClient {
     if (status < 200 || status > 299) {
       const body = await response.json()
       const bodyString = JSON.stringify(body)
-      throw new Error(`Request failed with status: ${status}, body: ${bodyString}`)
+      throw new Error(
+        `Request failed with status: ${status}, body: ${bodyString}`
+      )
     }
     return Promise.resolve(response)
   }

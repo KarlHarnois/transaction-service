@@ -46,7 +46,10 @@ function readTransactions(): Promise<AccwebTransaction[]> {
   return Promise.resolve(transactions)
 }
 
-async function createSingleTransaction(client: TransactionServiceClient, transaction: AccwebTransaction): Promise<Result> {
+async function createSingleTransaction(
+  client: TransactionServiceClient,
+  transaction: AccwebTransaction
+): Promise<Result> {
   try {
     const response = await client.updateTransaction({
       type: "accweb",
@@ -60,7 +63,7 @@ async function createSingleTransaction(client: TransactionServiceClient, transac
     process.stdout.write("x")
 
     return {
-      error: (error as Error),
+      error: error as Error,
       accwebIdentifier: transaction.identifiant
     }
   }
@@ -72,7 +75,7 @@ function aggregateResults(results: Result[]) {
     errors: []
   }
 
-  results.forEach(result => {
+  results.forEach((result) => {
     if (isError(result)) {
       summary.errors.push(result)
     } else if (isSuccess(result)) {
@@ -96,17 +99,21 @@ async function createManyTransactions(transactions: AccwebTransaction[]) {
     apiKey: apiKey
   })
 
-  console.log(`Pushing ${transactions.length} transactions to the transaction service...`)
+  console.log(
+    `Pushing ${transactions.length} transactions to the transaction service...`
+  )
 
   let allResults: Result[] = []
 
   const transactionBatches = chunk({ elements: transactions, size: 10 })
 
   for (const batch of transactionBatches) {
-    const batchResults = await Promise.all(batch.map(async transaction => {
-      return createSingleTransaction(client, transaction)
-    }))
-    batchResults.forEach(res => allResults.push(res))
+    const batchResults = await Promise.all(
+      batch.map(async (transaction) => {
+        return createSingleTransaction(client, transaction)
+      })
+    )
+    batchResults.forEach((res) => allResults.push(res))
   }
   console.log("\n")
   return aggregateResults(allResults)
@@ -114,16 +121,19 @@ async function createManyTransactions(transactions: AccwebTransaction[]) {
 
 readTransactions()
   .then(createManyTransactions)
-  .then(summary => {
-    console.log(`Created ${summary.successes.length} transactions with ${summary.errors.length} errors`)
+  .then((summary) => {
+    console.log(
+      `Created ${summary.successes.length} transactions with ${summary.errors.length} errors`
+    )
 
     summary.errors.forEach((error) => {
-      console.log(`Error for transaction ${error.accwebIdentifier}: ${error.error}`)
+      console.log(
+        `Error for transaction ${error.accwebIdentifier}: ${error.error}`
+      )
     })
 
     const output = new ImportValidator()
-      .validate(summary.successes.flatMap(s => s.transaction))
-      .errors
-      .forEach(error => console.log(error.message))
+      .validate(summary.successes.flatMap((s) => s.transaction))
+      .errors.forEach((error) => console.log(error.message))
   })
-  .catch(err => console.log(err.message))
+  .catch((err) => console.log(err.message))

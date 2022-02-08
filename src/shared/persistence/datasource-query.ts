@@ -7,10 +7,7 @@ export interface Query {
 export class FindSingleTransaction implements Query {
   private readonly props
 
-  constructor(props: {
-    id: string,
-    tableName: string
-  }) {
+  constructor(props: { id: string; tableName: string }) {
     this.props = props
   }
 
@@ -30,11 +27,7 @@ export class FindSingleTransaction implements Query {
 export class FindManyTransactions implements Query {
   private readonly props
 
-  constructor(props: {
-    year: number,
-    month: number,
-    tableName: string
-  }) {
+  constructor(props: { year: number; month: number; tableName: string }) {
     this.props = props
   }
 

@@ -18,48 +18,50 @@ describe("TransactionParser", () => {
     })
 
     it("parses the ids", () => {
-      expect(transactions.map(t => t.id)).toEqual([
-        "txn_id-1",
-        "txn_id-2"
-      ])
+      expect(transactions.map((t) => t.id)).toEqual(["txn_id-1", "txn_id-2"])
     })
 
     it("parses the categories", () => {
-      expect(transactions.map(t => t.category)).toEqual(["Food", "Entertainment"])
+      expect(transactions.map((t) => t.category)).toEqual([
+        "Food",
+        "Entertainment"
+      ])
     })
 
     it("parses the subcategories", () => {
-      expect(transactions.map(t => t.subcategory)).toEqual(["Grocery", "MTG"])
+      expect(transactions.map((t) => t.subcategory)).toEqual(["Grocery", "MTG"])
     })
 
     it("parses the amounts", () => {
-      expect(transactions.map(t => t.centAmount)).toEqual([15026, 6666])
+      expect(transactions.map((t) => t.centAmount)).toEqual([15026, 6666])
     })
 
     it("parses the currency amounts", () => {
-      expect(transactions.map(t => t.currencyCentAmount)).toEqual([15026, 6666])
+      expect(transactions.map((t) => t.currencyCentAmount)).toEqual([
+        15026, 6666
+      ])
     })
 
     it("parses the descriptions", () => {
-      expect(transactions.map(t => t.description)).toEqual([
+      expect(transactions.map((t) => t.description)).toEqual([
         "Rb - Epicerie 1111",
         "Centre De Jeux Expedit"
       ])
     })
 
     it("parses the full descriptions", () => {
-      expect(transactions.map(t => t.fullDescription)).toEqual([
+      expect(transactions.map((t) => t.fullDescription)).toEqual([
         "RB - EPICERIE 1111 - Full desc",
         "CENTRE DE JEUX EXPEDIT - Full desc"
       ])
     })
 
     it("parses the currencies", () => {
-      expect(transactions.map(t => t.currency)).toEqual(["CAD", "CAD"])
+      expect(transactions.map((t) => t.currency)).toEqual(["CAD", "CAD"])
     })
 
     it("parses the sources", () => {
-      expect(transactions.map(t => t.source)).toEqual([
+      expect(transactions.map((t) => t.source)).toEqual([
         {
           name: "Visa",
           last4: "0000"
@@ -72,16 +74,14 @@ describe("TransactionParser", () => {
     })
 
     it("parses the posted dates", () => {
-      expect(transactions.map(t => t.timestamps.postedAt)).toEqual([
-        1631750400000,
-        1634860800000
+      expect(transactions.map((t) => t.timestamps.postedAt)).toEqual([
+        1631750400000, 1634860800000
       ])
     })
 
     it("parses the authorization date", () => {
-      expect(transactions.map(t => t.timestamps.authorizedAt)).toEqual([
-        1631728207000,
-        1634760163000
+      expect(transactions.map((t) => t.timestamps.authorizedAt)).toEqual([
+        1631728207000, 1634760163000
       ])
     })
   })
