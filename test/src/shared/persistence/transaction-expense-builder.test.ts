@@ -1,5 +1,5 @@
 import { TransactionExpenseBuilder } from "@shared/persistence/transaction-expense-builder"
-import * as factories from "../../factories"
+import * as factories from "@test/factories"
 
 describe("TransactionExpenseBuilder", () => {
   let subject: TransactionExpenseBuilder

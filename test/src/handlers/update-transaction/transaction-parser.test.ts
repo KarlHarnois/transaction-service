@@ -1,7 +1,7 @@
-import { TransactionParser } from "@lambdas/update-transaction/transaction-parser"
-import { allMiddlewares } from "@lambdas/update-transaction/transaction-parser-middlewares/index"
-import { map } from "@lambdas/update-transaction/categories"
-import * as fixtures from "../../fixtures"
+import { TransactionParser } from "@handlers/update-transaction/transaction-parser"
+import { allMiddlewares } from "@handlers/update-transaction/transaction-parser-middlewares/index"
+import { map } from "@handlers/update-transaction/categories"
+import * as fixtures from "@test/fixtures"
 
 describe("TransactionParser", () => {
   describe("parseMany", () => {

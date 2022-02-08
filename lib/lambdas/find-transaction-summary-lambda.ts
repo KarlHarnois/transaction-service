@@ -1,8 +1,8 @@
-import * as path from "path"
 import * as core from "@aws-cdk/core"
 import * as apigateway from "@aws-cdk/aws-apigateway"
 import * as lambdaNodejs from "@aws-cdk/aws-lambda-nodejs"
 import * as dynamodb from "@aws-cdk/aws-dynamodb"
+import { Lambda } from "./lambda"
 
 export interface FindTransactionSummaryLambdaProps {
   authorizer: apigateway.Authorizer
@@ -10,11 +10,9 @@ export interface FindTransactionSummaryLambdaProps {
   table: dynamodb.Table
 }
 
-export class FindTransactionSummaryLambda {
-  private readonly yearQueryParam = "method.request.querystring.year"
-  private readonly monthQueryParam = "method.request.querystring.month"
-
+export class FindTransactionSummaryLambda extends Lambda {
   constructor(scope: core.Construct, props: FindTransactionSummaryLambdaProps) {
+    super()
     const lambda = this.createLambda(scope, props)
     const integration = this.createIntegration(lambda)
     const method = this.createMethod(integration, props)
@@ -29,9 +27,7 @@ export class FindTransactionSummaryLambda {
       scope,
       "FindTransactionSummaryLambda",
       {
-        entry: `${path.resolve(
-          __dirname
-        )}/../../src/lambdas/find-transaction-summary/handler.ts`,
+        entry: this.handlerPath("find-transaction-summary"),
         timeout: core.Duration.seconds(90),
         memorySize: 1024,
         environment: {

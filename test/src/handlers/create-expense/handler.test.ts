@@ -1,8 +1,8 @@
-import { CreateExpenseHandler } from "@lambdas/create-expense/handler"
-import * as factories from "../../factories"
+import { CreateExpenseHandler } from "@handlers/create-expense/handler"
 import * as queries from "@shared/persistence/datasource-query"
 import * as mutations from "@shared/persistence/datasource-mutation"
-import * as mocks from "../../mocks"
+import * as factories from "@test/factories"
+import * as mocks from "@test/mocks"
 
 describe("CreateExpenseHandler", () => {
   let subject: CreateExpenseHandler

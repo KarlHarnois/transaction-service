@@ -1,6 +1,6 @@
 import { PersistedTransactionRepository } from "@shared/persistence/transaction-repository"
-import * as factories from "../../factories"
-import * as mocks from "../../mocks"
+import * as factories from "@test/factories"
+import * as mocks from "@test/mocks"
 
 describe("PersistedTransactionRepository", () => {
   let subject: PersistedTransactionRepository

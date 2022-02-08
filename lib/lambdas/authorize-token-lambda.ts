@@ -2,16 +2,18 @@ import * as path from "path"
 import * as core from "@aws-cdk/core"
 import * as apigateway from "@aws-cdk/aws-apigateway"
 import * as lambdaNodejs from "@aws-cdk/aws-lambda-nodejs"
+import { Lambda } from "./lambda"
 
 export interface AuthorizeTokenLambdaProps {
   api: apigateway.RestApi
   tokenSecret: string
 }
 
-export class AuthorizeTokenLambda {
+export class AuthorizeTokenLambda extends Lambda {
   readonly authorizer
 
   constructor(scope: core.Construct, props: AuthorizeTokenLambdaProps) {
+    super()
     const lambda = this.createLambda(scope, props)
 
     this.authorizer = new apigateway.TokenAuthorizer(scope, "TokenAuthorizer", {
@@ -24,9 +26,7 @@ export class AuthorizeTokenLambda {
     props: AuthorizeTokenLambdaProps
   ) {
     return new lambdaNodejs.NodejsFunction(scope, "AuthorizeTokenLambda", {
-      entry: `${path.resolve(
-        __dirname
-      )}/../../src/lambdas/authorize-token/handler.ts`,
+      entry: this.handlerPath("authorize-token"),
       timeout: core.Duration.seconds(90),
       environment: {
         REGION: core.Stack.of(scope).region,

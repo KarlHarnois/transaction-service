@@ -28,7 +28,9 @@
     "types": ["node", "jest"],
     "paths": {
       "@shared/*": ["src/shared/*"],
-      "@lambdas/*": ["src/lambdas/*"]
+      "@handlers/*": ["src/handlers/*"],
+      "@test/*": ["test/*"],
+      "@lib/*": ["lib/*"]
     }
   }
 }

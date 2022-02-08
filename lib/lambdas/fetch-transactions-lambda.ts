@@ -1,8 +1,8 @@
-import * as path from "path"
 import * as core from "@aws-cdk/core"
 import * as apigateway from "@aws-cdk/aws-apigateway"
 import * as lambdaNodejs from "@aws-cdk/aws-lambda-nodejs"
 import * as dynamodb from "@aws-cdk/aws-dynamodb"
+import { Lambda } from "./lambda"
 
 export interface FetchTransactionsLambdaProps {
   resource: apigateway.Resource
@@ -11,15 +11,12 @@ export interface FetchTransactionsLambdaProps {
   table: dynamodb.Table
 }
 
-export class FetchTransactionsLambda {
-  private readonly yearQueryParam = "method.request.querystring.year"
-  private readonly monthQueryParam = "method.request.querystring.month"
-
+export class FetchTransactionsLambda extends Lambda {
   constructor(scope: core.Construct, props: FetchTransactionsLambdaProps) {
+    super()
     const lambda = this.createLambda(scope, props)
     const integration = this.createIntegration(lambda)
     const method = this.createMethod(integration, props)
-
     props.table.grantReadData(lambda)
   }
 
@@ -28,9 +25,7 @@ export class FetchTransactionsLambda {
     props: FetchTransactionsLambdaProps
   ) {
     return new lambdaNodejs.NodejsFunction(scope, "FetchTransactionsLambda", {
-      entry: `${path.resolve(
-        __dirname
-      )}/../../src/lambdas/fetch-transactions/handler.ts`,
+      entry: this.handlerPath("fetch-transactions"),
       timeout: core.Duration.seconds(90),
       memorySize: 1024,
       environment: {

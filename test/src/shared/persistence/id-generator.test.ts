@@ -1,5 +1,5 @@
 import { IdGenerator } from "@shared/persistence/id-generator"
-import * as factories from "../../factories"
+import * as factories from "@test/factories"
 
 describe("IdGenerator", () => {
   const subject = new IdGenerator()
