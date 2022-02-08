@@ -13,6 +13,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "cdk": "cdk",
+    "prettier": "npx prettier --write .",
     "token:gen": "ts-node -r tsconfig-paths/register bin/generate-auth-token",
     "accweb:download": "tsc && ts-node -r tsconfig-paths/register bin/download-accweb-transactions",
     "accweb:import": "tsc && ts-node -r tsconfig-paths/register bin/import-accweb-transactions",
