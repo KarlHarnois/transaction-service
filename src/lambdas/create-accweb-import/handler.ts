@@ -24,7 +24,7 @@ export class CreateAccwebImportHandler extends Handler {
     const accwebImport = await this.persistImport(number)
     const transactions = this.repo.persistTransactions(
       accwebImport,
-      payload.transactions,
+      payload.transactions
     )
     return this.response(201, { transactions, import: accwebImport })
   }
