@@ -6,8 +6,9 @@ import * as dynamodb from "@aws-cdk/aws-dynamodb"
 
 export interface CreateExpenseLambdaProps {
   transactionByIdResource: apigateway.Resource
-  tokenSecret: string
+  authorizer: apigateway.Authorizer
   table: dynamodb.Table
+  tokenSecret: string
 }
 
 export class CreateExpenseLambda {
@@ -46,6 +47,7 @@ export class CreateExpenseLambda {
     const resource = props.transactionByIdResource.addResource("expenses")
 
     return resource.addMethod("POST", integration, {
+      authorizer: props.authorizer,
       apiKeyRequired: true
     })
   }
