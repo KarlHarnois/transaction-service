@@ -8,10 +8,7 @@ export interface Mutation {
 export class PersistTransaction implements Mutation {
   private readonly props
 
-  constructor(props: {
-    tableName: string,
-    transaction: Transaction
-  }) {
+  constructor(props: { tableName: string; transaction: Transaction }) {
     this.props = props
   }
 
@@ -40,7 +37,7 @@ export class PersistTransaction implements Mutation {
 export class PersistExpense implements Mutation {
   private readonly props
 
-  constructor(props: { tableName: string, expense: Expense }) {
+  constructor(props: { tableName: string; expense: Expense }) {
     this.props = props
   }
 

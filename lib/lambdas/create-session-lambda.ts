@@ -17,7 +17,9 @@ export class CreateSessionLambda {
 
   private createLambda(scope: core.Construct, props: CreateSessionLambdaProps) {
     return new lambdaNodejs.NodejsFunction(scope, "CreateSessionLambda", {
-      entry: `${path.resolve(__dirname)}/../../src/lambdas/create-session/handler.ts`,
+      entry: `${path.resolve(
+        __dirname
+      )}/../../src/lambdas/create-session/handler.ts`,
       timeout: core.Duration.seconds(90),
       environment: {
         AUTH_TOKEN_SECRET: props.tokenSecret
@@ -33,7 +35,10 @@ export class CreateSessionLambda {
     })
   }
 
-  private createMethod(integration: apigateway.Integration, props: CreateSessionLambdaProps) {
+  private createMethod(
+    integration: apigateway.Integration,
+    props: CreateSessionLambdaProps
+  ) {
     const resource: apigateway.Resource = props.api.root.addResource("sessions")
     return resource.addMethod("POST", integration, {
       apiKeyRequired: true

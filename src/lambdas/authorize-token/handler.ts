@@ -24,7 +24,7 @@ const validate = (token?: string) => {
   const secret = process.env.AUTH_TOKEN_SECRET
 
   if (secret === undefined) {
-    throw new Error('Expected $AUTH_TOKEN_SECRET secret to be set')
+    throw new Error("Expected $AUTH_TOKEN_SECRET secret to be set")
   }
 
   const decodedToken = AuthToken.decode(token, secret)
@@ -43,7 +43,7 @@ exports.handler = async (event: any, context?: any) => {
   try {
     validate(event.authorizationToken)
     return response("Allow", event.methodArn)
-  } catch(error) {
+  } catch (error) {
     logger.logEvent({ category: "ERROR", payload: error })
     return response("Deny", event.methodArn)
   }

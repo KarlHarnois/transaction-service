@@ -15,7 +15,7 @@ describe("ImportValidator", () => {
         factories.createTransaction({ id: "4", description: "Myriade" })
       ])
 
-      expect(output.errors.map(e => e.message)).toEqual([
+      expect(output.errors.map((e) => e.message)).toEqual([
         "Found 2 duplicate transaction ids 1 with descriptions: Saint-Henri, Dispatch",
         "Found 3 duplicate transaction ids 2 with descriptions: Larue, HUIT, Standard"
       ])

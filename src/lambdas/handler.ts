@@ -27,10 +27,10 @@ export abstract class Handler {
     try {
       const response = await this.processEvent(this.parseBody(event))
       return response
-    } catch(error) {
+    } catch (error) {
       this.logger.logEvent({ category: "ERROR", payload: error })
       const errorMessage = (<Error>error).message
-      return this.response(500, { error: { message: errorMessage }})
+      return this.response(500, { error: { message: errorMessage } })
     }
   }
 

@@ -20,13 +20,18 @@ export class UpdateTransactionLambda {
     props.table.grantReadWriteData(lambda)
   }
 
-  private createLambda(scope: core.Construct, props: UpdateTransactionLambdaProps) {
+  private createLambda(
+    scope: core.Construct,
+    props: UpdateTransactionLambdaProps
+  ) {
     return new lambdaNodejs.NodejsFunction(scope, "UpdateTransactionLambda", {
-      entry: `${path.resolve(__dirname)}/../../src/lambdas/update-transaction/handler.ts`,
+      entry: `${path.resolve(
+        __dirname
+      )}/../../src/lambdas/update-transaction/handler.ts`,
       timeout: core.Duration.seconds(90),
       memorySize: 1024,
       environment: {
-        TABLE_NAME: props.table.tableName,
+        TABLE_NAME: props.table.tableName
       }
     })
   }
@@ -34,12 +39,15 @@ export class UpdateTransactionLambda {
   private createIntegration(lambda: lambdaNodejs.NodejsFunction) {
     return new apigateway.LambdaIntegration(lambda, {
       requestTemplates: {
-        "application/json": '{ "statusCode": "200" }',
+        "application/json": '{ "statusCode": "200" }'
       }
     })
   }
 
-  private createMethod(integration: apigateway.Integration, props: UpdateTransactionLambdaProps) {
+  private createMethod(
+    integration: apigateway.Integration,
+    props: UpdateTransactionLambdaProps
+  ) {
     return props.resource.addMethod("PUT", integration, {
       authorizer: props.authorizer,
       apiKeyRequired: true

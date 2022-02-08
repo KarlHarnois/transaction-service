@@ -16,8 +16,8 @@ export class CreateExpenseHandler extends Handler {
   private readonly props
 
   constructor(props: {
-    logger: Logger,
-    dataSource: DataSource,
+    logger: Logger
+    dataSource: DataSource
     tableName: string
   }) {
     super(props.logger)
@@ -41,7 +41,10 @@ export class CreateExpenseHandler extends Handler {
     throw new Error(`Transaction with id ${id} not found.`)
   }
 
-  private buildExpense(payload: CreateExpensePayload, transaction: Transaction): Expense {
+  private buildExpense(
+    payload: CreateExpensePayload,
+    transaction: Transaction
+  ): Expense {
     const generator = new IdGenerator()
     const params = payload.expense
 
@@ -64,6 +67,10 @@ export class CreateExpenseHandler extends Handler {
 exports.handler = async (event: any, context?: any) => {
   const logger = new Logger()
   const dataSource = new DynamoDBSource(logger)
-  const handler = new CreateExpenseHandler({ logger, dataSource, tableName: env("TABLE_NAME") })
+  const handler = new CreateExpenseHandler({
+    logger,
+    dataSource,
+    tableName: env("TABLE_NAME")
+  })
   return await handler.call(event)
 }

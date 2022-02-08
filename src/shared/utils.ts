@@ -1,4 +1,7 @@
-export async function asyncFind<A>(array: A[], predicate: (a: A) => Promise<boolean>) {
+export async function asyncFind<A>(
+  array: A[],
+  predicate: (a: A) => Promise<boolean>
+) {
   const result = await Promise.all(array.map(predicate))
   return array.find((_, index) => result[index])
 }
@@ -13,11 +16,11 @@ export function env(key: string): string {
   }
 }
 
-export function chunk<A>(args: { elements: A[], size: number }): A[][] {
+export function chunk<A>(args: { elements: A[]; size: number }): A[][] {
   let resultArray: A[][] = []
 
   args.elements.forEach((elem, index) => {
-    const chunkIndex = Math.floor(index/args.size)
+    const chunkIndex = Math.floor(index / args.size)
     if (!resultArray[chunkIndex]) resultArray[chunkIndex] = []
     resultArray[chunkIndex].push(elem)
   })
@@ -25,7 +28,7 @@ export function chunk<A>(args: { elements: A[], size: number }): A[][] {
 }
 
 export interface LoggableEvent {
-  category: "ERROR" | "LAMBDA_EVENT" | "QUERY" | "TRANSACT_WRITE" | "WARN",
+  category: "ERROR" | "LAMBDA_EVENT" | "QUERY" | "TRANSACT_WRITE" | "WARN"
   payload: any
 }
 
@@ -33,7 +36,7 @@ export class Logger {
   logEvent(event: LoggableEvent) {
     const fullPayload = {
       category: event.category,
-      ...event.payload,
+      ...event.payload
     }
     console.log(`${event.category}\n`, JSON.stringify(fullPayload))
   }

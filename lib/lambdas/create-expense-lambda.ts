@@ -20,7 +20,9 @@ export class CreateExpenseLambda {
 
   private createLambda(scope: core.Construct, props: CreateExpenseLambdaProps) {
     return new lambdaNodejs.NodejsFunction(scope, "CreateExpenseLambda", {
-      entry: `${path.resolve(__dirname)}/../../src/lambdas/create-expense/handler.ts`,
+      entry: `${path.resolve(
+        __dirname
+      )}/../../src/lambdas/create-expense/handler.ts`,
       timeout: core.Duration.seconds(90),
       environment: {
         AUTH_TOKEN_SECRET: props.tokenSecret,
@@ -37,7 +39,10 @@ export class CreateExpenseLambda {
     })
   }
 
-  private createMethod(integration: apigateway.Integration, props: CreateExpenseLambdaProps) {
+  private createMethod(
+    integration: apigateway.Integration,
+    props: CreateExpenseLambdaProps
+  ) {
     const resource = props.transactionByIdResource.addResource("expenses")
 
     return resource.addMethod("POST", integration, {

@@ -5,16 +5,16 @@ export interface AccwebRepository {
   findImports(): Promise<AccwebImport[]>
   findTransactions(accwebImport: AccwebImport): Promise<AccwebTransaction[]>
   persistImport(accwebImport: AccwebImport): Promise<AccwebImport>
-  persistTransactions(accwebImport: AccwebImport, transactions: AccwebTransaction[]): Promise<AccwebTransaction[]>
+  persistTransactions(
+    accwebImport: AccwebImport,
+    transactions: AccwebTransaction[]
+  ): Promise<AccwebTransaction[]>
 }
 
 export class PersistedAccwebRepository implements AccwebRepository {
   private readonly props
 
-  constructor(props: {
-    tableName: string,
-    dataSource: DataSource
-  }) {
+  constructor(props: { tableName: string; dataSource: DataSource }) {
     this.props = props
   }
 
@@ -30,7 +30,10 @@ export class PersistedAccwebRepository implements AccwebRepository {
     return { id: "", number: 1 }
   }
 
-  async persistTransactions(accwebImport: AccwebImport, transactions: AccwebTransaction[]) {
+  async persistTransactions(
+    accwebImport: AccwebImport,
+    transactions: AccwebTransaction[]
+  ) {
     return []
   }
 }

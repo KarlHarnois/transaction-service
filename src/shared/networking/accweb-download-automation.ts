@@ -16,8 +16,8 @@ export class AccwebDownloadAutomation {
   private readonly PRODUCT_TITLE_SELECTOR = ".titre-produit"
 
   constructor(props: {
-    credentials: Credentials,
-    product: AccwebFinancialProduct,
+    credentials: Credentials
+    product: AccwebFinancialProduct
     page: playwright.Page
   }) {
     this.props = props
@@ -39,7 +39,9 @@ export class AccwebDownloadAutomation {
   }
 
   private async gotoLogin() {
-    await this.page.goto("https://accweb.mouv.desjardins.com/identifiantunique/securite-garantie/authentification/auth/manuel")
+    await this.page.goto(
+      "https://accweb.mouv.desjardins.com/identifiantunique/securite-garantie/authentification/auth/manuel"
+    )
   }
 
   private async fillLogin() {
@@ -65,9 +67,9 @@ export class AccwebDownloadAutomation {
     const labelText = await label?.textContent()
     const question = labelText?.split(":")?.pop()?.trim()
 
-    const answer = this.props.credentials.questions
-      .find((defiQuestion: DefiQuestion) => defiQuestion.rawValue === question)
-      ?.answer
+    const answer = this.props.credentials.questions.find(
+      (defiQuestion: DefiQuestion) => defiQuestion.rawValue === question
+    )?.answer
 
     await this.page.fill("#valeurReponse", answer ?? "")
     await this.page.click("button[type=submit]")
@@ -77,7 +79,9 @@ export class AccwebDownloadAutomation {
     const selector = this.PRODUCT_TITLE_SELECTOR
     await this.page.waitForSelector(selector)
     const allLinks = await this.page.$$(selector)
-    const link = await utils.asyncFind(allLinks, async link => this.isProductLink(link))
+    const link = await utils.asyncFind(allLinks, async (link) =>
+      this.isProductLink(link)
+    )
 
     if (link) {
       await link.click()
@@ -86,15 +90,21 @@ export class AccwebDownloadAutomation {
     }
   }
 
-  private async isProductLink(link: playwright.ElementHandle<SVGElement | HTMLElement>) {
+  private async isProductLink(
+    link: playwright.ElementHandle<SVGElement | HTMLElement>
+  ) {
     const text = await link.textContent()
     const productName = this.product.name.toLowerCase()
     return text?.toLowerCase().includes(productName) ?? false
   }
 
   private async waitForTransactions() {
-    const response = await this.page.waitForResponse(response => {
-      return response.url().includes("/api/distribution-libreservice/dossier-operation/operations/v3/transactions")
+    const response = await this.page.waitForResponse((response) => {
+      return response
+        .url()
+        .includes(
+          "/api/distribution-libreservice/dossier-operation/operations/v3/transactions"
+        )
     })
     const body = await response.body()
     const json = JSON.parse(body.toString())

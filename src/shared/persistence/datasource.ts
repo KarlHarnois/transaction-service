@@ -51,6 +51,6 @@ export class DynamoDBSource implements DataSource {
     return this.client
       .transactWrite(input)
       .promise()
-      .then(_ => {})
+      .then((_) => {})
   }
 }

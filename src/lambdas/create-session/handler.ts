@@ -5,7 +5,7 @@ import { Handler, Event } from "../handler"
 export class CreateSessionHandler extends Handler {
   private props
 
-  constructor(props: { logger: Logger, secret: string }) {
+  constructor(props: { logger: Logger; secret: string }) {
     super(props.logger)
     this.props = props
   }
@@ -22,6 +22,9 @@ export class CreateSessionHandler extends Handler {
 
 exports.handler = async (event: any, context?: any) => {
   const logger = new Logger()
-  const handler = new CreateSessionHandler({ logger, secret: env("AUTH_TOKEN_SECRET") })
+  const handler = new CreateSessionHandler({
+    logger,
+    secret: env("AUTH_TOKEN_SECRET")
+  })
   return await handler.call(event)
 }

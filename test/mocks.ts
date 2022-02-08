@@ -12,7 +12,7 @@ export class MockDataSource implements DataSource {
     this.queries.push(query)
 
     return {
-      items: this.jsonObjects.map(json => {
+      items: this.jsonObjects.map((json) => {
         return { jsonObject: json }
       })
     }

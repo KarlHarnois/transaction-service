@@ -1,14 +1,17 @@
-import { AccwebRepository, PersistedAccwebRepository } from "@shared/persistence/accweb-repository"
+import {
+  AccwebRepository,
+  PersistedAccwebRepository
+} from "@shared/persistence/accweb-repository"
 import { CreateAccwebImportPayload } from "@shared/networking/transaction-service-client"
-import { DynamoDBSource  } from "@shared/persistence/datasource"
+import { DynamoDBSource } from "@shared/persistence/datasource"
 import { IdGenerator } from "@shared/persistence/id-generator"
 import { env, Logger } from "@shared/utils"
-import { Handler, Event } from  "../handler"
+import { Handler, Event } from "../handler"
 
 export class CreateAccwebImportHandler extends Handler {
   private props
 
-  constructor(props: { logger: Logger, repo: AccwebRepository }) {
+  constructor(props: { logger: Logger; repo: AccwebRepository }) {
     super(props.logger)
     this.props = props
   }
@@ -19,7 +22,10 @@ export class CreateAccwebImportHandler extends Handler {
     const previousImport = await this.findMostRecentImport()
     const number = (previousImport?.number ?? 0) + 1
     const accwebImport = await this.persistImport(number)
-    const transactions = this.repo.persistTransactions(accwebImport, payload.transactions)
+    const transactions = this.repo.persistTransactions(
+      accwebImport,
+      payload.transactions
+    )
     return this.response(201, { transactions, import: accwebImport })
   }
 
@@ -33,7 +39,7 @@ export class CreateAccwebImportHandler extends Handler {
     const imports = await this.repo.findImports()
 
     return imports.reduce((previous, current) => {
-      return (previous.number > current.number) ? previous : current
+      return previous.number > current.number ? previous : current
     })
   }
 
