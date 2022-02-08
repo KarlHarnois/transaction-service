@@ -15,19 +15,24 @@ export class FindSingleTransaction implements Query {
     return {
       TableName: this.props.tableName,
       IndexName: "GSI1",
-      KeyConditionExpression: "SK = :sortKey",
+      KeyConditionExpression: "SK = :id",
       ExpressionAttributeValues: {
-        ":sortKey": this.props.id
+        ":id": this.props.id
       },
       ConsistentRead: false
     }
   }
 }
 
-export class FindManyTransactions implements Query {
+export class QueryByMonthYear implements Query {
   private readonly props
 
-  constructor(props: { year: number; month: number; tableName: string }) {
+  constructor(props: {
+    year: number
+    month: number
+    tableName: string
+    type: string
+  }) {
     this.props = props
   }
 
@@ -37,7 +42,7 @@ export class FindManyTransactions implements Query {
       KeyConditionExpression: "PK = :partitionKey and begins_with(SK, :type)",
       ExpressionAttributeValues: {
         ":partitionKey": `${this.props.year}-${this.props.month}`,
-        ":type": "txn"
+        ":type": this.props.type
       },
       ConsistentRead: true
     }

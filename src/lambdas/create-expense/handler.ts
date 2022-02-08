@@ -3,7 +3,7 @@ import { DataSource, DynamoDBSource } from "@shared/persistence/datasource"
 import { Handler, Event } from "../handler"
 import { PersistedTransactionRepository } from "@shared/persistence/transaction-repository"
 import { PersistedExpenseRepository } from "@shared/persistence/expense-repository"
-import { Expense, Transaction } from "@shared/types"
+import { ExpenseWithTransactionDetails, Transaction } from "@shared/types"
 import { IdGenerator } from "@shared/persistence/id-generator"
 
 interface CreateExpensePayload {
@@ -44,7 +44,7 @@ export class CreateExpenseHandler extends Handler {
   private buildExpense(
     payload: CreateExpensePayload,
     transaction: Transaction
-  ): Expense {
+  ): ExpenseWithTransactionDetails {
     const generator = new IdGenerator()
     const params = payload.expense
 
@@ -58,7 +58,7 @@ export class CreateExpenseHandler extends Handler {
     }
   }
 
-  private async persistExpense(expense: Expense) {
+  private async persistExpense(expense: ExpenseWithTransactionDetails) {
     const repo = new PersistedExpenseRepository(this.props)
     return await repo.persist(expense)
   }

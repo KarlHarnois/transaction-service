@@ -1,3 +1,8 @@
+export interface MonthYear {
+  month: number
+  year: number
+}
+
 export interface TransactionSource {
   name: string
   last4?: string
@@ -19,9 +24,16 @@ export interface Transaction {
   }
 }
 
+export interface TransactionWithExpense extends Transaction {
+  expenses: Expense[]
+}
+
 export interface Expense {
   id: string
   centAmount: number
+}
+
+export interface ExpenseWithTransactionDetails extends Expense {
   transactionDetails: {
     id: string
     authorizedAt: number

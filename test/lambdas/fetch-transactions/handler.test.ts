@@ -7,15 +7,26 @@ describe("FetchTransactionsHandler", () => {
   let dataSource: mocks.MockDataSource
 
   const transactions = [
-    factories.createTransaction({ id: 1234 }),
-    factories.createTransaction({ id: 4567 })
+    factories.createTransaction({ id: "txn_1" }),
+    factories.createTransaction({ id: "txn_2" })
+  ]
+
+  const expenses = [
+    factories.createExpense({
+      id: "exp_1",
+      transactionDetails: { id: "txn_2" }
+    }),
+    factories.createExpense({
+      id: "exp_2",
+      transactionDetails: { id: "txn_2" }
+    })
   ]
 
   beforeEach(() => {
     const logger = new mocks.MockLogger()
 
     dataSource = new mocks.MockDataSource()
-    dataSource.jsonObjects = transactions
+    dataSource.jsonObjects = { txn: transactions, exp: expenses }
 
     subject = new FetchTransactionsHandler({
       logger,
@@ -37,23 +48,52 @@ describe("FetchTransactionsHandler", () => {
       expect(response.statusCode).toEqual(200)
     })
 
-    it("returns the transactions", async () => {
+    it("returns the transactions, including the expenses", async () => {
       const response = await subject.call(event)
-      expect(JSON.parse(response.body)).toEqual({ transactions })
+
+      expect(JSON.parse(response.body)).toEqual({
+        transactions: [
+          expect.objectContaining({
+            id: "txn_1",
+            expenses: []
+          }),
+          expect.objectContaining({
+            id: "txn_2",
+            expenses: [
+              expect.objectContaining({ id: "exp_1" }),
+              expect.objectContaining({ id: "exp_2" })
+            ]
+          })
+        ]
+      })
     })
 
-    it("performs the correct query", async () => {
+    it("performs the correct transaction query", async () => {
       await subject.call(event)
 
-      expect(dataSource.queries[0].toInput()).toEqual({
-        ConsistentRead: true,
-        KeyConditionExpression: "PK = :partitionKey and begins_with(SK, :type)",
-        ExpressionAttributeValues: {
-          ":partitionKey": "2000-11",
-          ":type": "txn"
-        },
-        TableName: "testTable"
-      })
+      expect(dataSource.queries[0].toInput()).toEqual(
+        expect.objectContaining({
+          TableName: "testTable",
+          ExpressionAttributeValues: {
+            ":partitionKey": "2000-11",
+            ":type": "txn"
+          }
+        })
+      )
+    })
+
+    it("performs the correct expense query", async () => {
+      await subject.call(event)
+
+      expect(dataSource.queries[1].toInput()).toEqual(
+        expect.objectContaining({
+          TableName: "testTable",
+          ExpressionAttributeValues: {
+            ":partitionKey": "2000-11",
+            ":type": "exp"
+          }
+        })
+      )
     })
   })
 })
