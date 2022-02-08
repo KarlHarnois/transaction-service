@@ -39,7 +39,7 @@ describe("FetchTransactionsHandler", () => {
 
     it("returns the transactions", async () => {
       const response = await subject.call(event)
-      expect(JSON.parse(response.body).transactions).toEqual(transactions)
+      expect(JSON.parse(response.body)).toEqual({ transactions })
     })
 
     it("performs the correct query", async () => {
