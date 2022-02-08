@@ -46,3 +46,15 @@ export function createAccwebTransaction(
     ...attributes
   }
 }
+
+export function createExpense(attributes: any): types.Expense {
+  return {
+    id: "id",
+    centAmount: 1000,
+    transactionDetails: {
+      id: "transactionId",
+      authorizedAt: Date.now()
+    },
+    ...attributes
+  }
+}

@@ -20,7 +20,7 @@ export interface Transaction {
 }
 
 export interface TransactionWithExpense extends Transaction {
-  expense: Expense
+  expenses: Expense[]
 }
 
 export interface Expense {
