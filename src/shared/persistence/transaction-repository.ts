@@ -55,8 +55,9 @@ export class PersistedTransactionRepository implements TransactionRepository {
   }
 
   async findMany(args: { year: number; month: number }) {
-    const query = new queries.FindManyTransactions({
+    const query = new queries.QueryByMonthYear({
       tableName: this.props.tableName,
+      type: "txn",
       ...args
     })
     const result = await this.props.dataSource.performQuery(query)
@@ -68,7 +69,6 @@ export class PersistedTransactionRepository implements TransactionRepository {
       transaction: transaction,
       tableName: this.props.tableName
     })
-
     await this.props.dataSource.performMutation(mutation)
     return transaction
   }
