@@ -2,3 +2,7 @@ cdk.out
 node_modules
 tmp
 docs
+*.d.ts
+lib/**/*.js
+src/**/*.js
+test/**/*.js
