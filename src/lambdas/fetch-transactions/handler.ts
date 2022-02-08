@@ -1,22 +1,24 @@
-import { DynamoDBSource } from "@shared/persistence/datasource"
-import {
-  PersistedTransactionRepository,
-  TransactionRepository
-} from "@shared/persistence/transaction-repository"
+import { DynamoDBSource, DataSource } from "@shared/persistence/datasource"
 import { env, Logger } from "@shared/utils"
 import { Handler, Event } from "../handler"
+import { PersistedTransactionRepository } from "@shared/persistence/transaction-repository"
 
 export class FetchTransactionsHandler extends Handler {
   private readonly props
 
-  constructor(props: { repo: TransactionRepository; logger: Logger }) {
+  constructor(props: {
+    logger: Logger
+    dataSource: DataSource
+    tableName: string
+  }) {
     super(props.logger)
     this.props = props
   }
 
   async processEvent(event: Event) {
     const monthYear = this.monthYear(event)
-    const transactions = await this.props.repo.findMany(monthYear)
+    const repo = new PersistedTransactionRepository(this.props)
+    const transactions = await repo.findMany(monthYear)
     return this.response(200, { transactions })
   }
 
@@ -40,13 +42,13 @@ export class FetchTransactionsHandler extends Handler {
 
 exports.handler = async (event: any, context?: any) => {
   const logger = new Logger()
-  const dynamodb = new DynamoDBSource(logger)
+  const dataSource = new DynamoDBSource(logger)
 
-  const repo = new PersistedTransactionRepository({
-    dataSource: dynamodb,
-    tableName: env("TABLE_NAME")
+  const handler = new FetchTransactionsHandler({
+    tableName: env("TABLE_NAME"),
+    dataSource,
+    logger
   })
 
-  const handler = new FetchTransactionsHandler({ logger, repo })
   return await handler.call(event)
 }
