@@ -50,7 +50,7 @@ describe("CreateExpenseHandler", () => {
         })
       }
 
-      describe("when transaction does not xist", () => {
+      describe("when transaction does not exist", () => {
         it("returns the correct status code", async () => {
           const response = await subject.call(event)
           expect(response.statusCode).toEqual(500)
@@ -90,7 +90,7 @@ describe("CreateExpenseHandler", () => {
             id: "txn_123456",
             timestamps
           })
-          dataSource.jsonObjects = [transaction]
+          dataSource.jsonObjects = { txn: [transaction] }
         })
 
         it("returns the correct status code", async () => {

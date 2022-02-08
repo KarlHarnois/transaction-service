@@ -15,9 +15,9 @@ export class FindSingleTransaction implements Query {
     return {
       TableName: this.props.tableName,
       IndexName: "GSI1",
-      KeyConditionExpression: "SK = :sortKey",
+      KeyConditionExpression: "SK = :id",
       ExpressionAttributeValues: {
-        ":sortKey": this.props.id
+        ":id": this.props.id
       },
       ConsistentRead: false
     }

@@ -2,7 +2,7 @@ import * as types from "@shared/types"
 
 export function createTransaction(attributes: any): types.Transaction {
   return {
-    id: "id",
+    id: "txn_12345",
     description: "description",
     fullDescription: "full_description",
     centAmount: 1000,
@@ -49,7 +49,7 @@ export function createAccwebTransaction(
 
 export function createExpense(attributes: any): types.Expense {
   return {
-    id: "id",
+    id: "exp_12345",
     centAmount: 1000,
     transactionDetails: {
       id: "transactionId",

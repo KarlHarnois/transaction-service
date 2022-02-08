@@ -15,7 +15,7 @@ describe("FetchTransactionsHandler", () => {
     const logger = new mocks.MockLogger()
 
     dataSource = new mocks.MockDataSource()
-    dataSource.jsonObjects = transactions
+    dataSource.jsonObjects = { txn: transactions }
 
     subject = new FetchTransactionsHandler({
       logger,

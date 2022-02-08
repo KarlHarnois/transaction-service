@@ -17,38 +17,38 @@ describe("PersistedTransactionRepository", () => {
 
   describe("find", () => {
     it("performs the correct query", async () => {
-      await subject.find("1234")
+      await subject.find("txn_1234")
 
       expect(dataSource.queries[0].toInput()).toMatchObject({
         TableName: "test_table",
         ConsistentRead: false,
-        KeyConditionExpression: "SK = :sortKey",
+        KeyConditionExpression: "SK = :id",
         ExpressionAttributeValues: {
-          ":sortKey": "1234"
+          ":id": "txn_1234"
         }
       })
     })
 
     describe("when queried transaction is not persisted yet", () => {
       beforeEach(() => {
-        dataSource.jsonObjects = []
+        dataSource.jsonObjects = { txn: [] }
       })
 
       it("returns nothing", async () => {
-        const result = await subject.find("1234")
+        const result = await subject.find("txn_1234")
         expect(result).toBeUndefined()
       })
     })
 
     describe("when the queried transaction exists", () => {
-      const transaction = factories.createTransaction({})
+      const transaction = factories.createTransaction({ id: "txn_1234" })
 
       beforeEach(() => {
-        dataSource.jsonObjects = [transaction]
+        dataSource.jsonObjects = { txn: [transaction] }
       })
 
       it("returns the transaction", async () => {
-        const result = await subject.find("1234")
+        const result = await subject.find("txn_1234")
         expect(result).toEqual(transaction)
       })
     })
