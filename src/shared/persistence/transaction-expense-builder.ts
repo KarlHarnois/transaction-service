@@ -11,25 +11,23 @@ export class TransactionExpenseBuilder {
   }
 
   assignExpenses(): types.TransactionWithExpense[] {
-    let expensesByTransaction: { [transactionId: string]: types.Expense[] } = {}
+    const hash = this.aggregateExpensesByTransactions()
+
+    return this.props.transactions.map((txn) => {
+      const expenses = hash[txn.id] ?? []
+      return { expenses, ...txn }
+    })
+  }
+
+  private aggregateExpensesByTransactions() {
+    let result: { [transactionId: string]: types.Expense[] } = {}
 
     this.props.expenses.forEach((expense) => {
       const { transactionDetails, ...rest } = expense
-
-      if (expensesByTransaction[transactionDetails.id] === undefined) {
-        expensesByTransaction[transactionDetails.id] = []
-      }
-
-      expensesByTransaction[transactionDetails.id]?.push(rest)
+      const { id } = transactionDetails
+      result[id] === undefined ? (result[id] = [rest]) : result[id]?.push(rest)
     })
 
-    return this.props.transactions.map((txn) => {
-      const expenses = expensesByTransaction[txn.id] ?? []
-
-      return {
-        expenses,
-        ...txn
-      }
-    })
+    return result
   }
 }
