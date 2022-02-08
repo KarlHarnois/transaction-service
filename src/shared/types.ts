@@ -1,3 +1,8 @@
+export interface MonthYear {
+  month: number
+  year: number
+}
+
 export interface TransactionSource {
   name: string
   last4?: string

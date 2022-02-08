@@ -19,6 +19,14 @@ describe("TransactionExpenseBuilder", () => {
           id: "txn_2",
           authorizedAt: 111111111111
         }
+      },
+      {
+        id: "exp_2",
+        centAmount: 1000,
+        transactionDetails: {
+          id: "txn_2",
+          authorizedAt: 111111111111
+        }
       }
     ]
 
@@ -36,7 +44,10 @@ describe("TransactionExpenseBuilder", () => {
 
       expect(result.map((txn) => txn.expenses)).toEqual([
         [],
-        [{ id: "exp_1", centAmount: 5050 }],
+        [
+          { id: "exp_1", centAmount: 5050 },
+          { id: "exp_2", centAmount: 1000 }
+        ],
         []
       ])
     })
