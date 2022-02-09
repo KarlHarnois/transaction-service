@@ -18,7 +18,7 @@ export class FetchTransactionsLambda extends Lambda {
     const lambda = this.createLambda({
       scope,
       construct: "FetchTransactionsLambda",
-      handler: "fetch-transaction",
+      handler: "fetch-transactions",
       env: {
         TABLE_NAME: props.table.tableName
       }
