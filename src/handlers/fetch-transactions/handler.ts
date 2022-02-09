@@ -19,24 +19,11 @@ export class FetchTransactionsHandler extends Handler {
   }
 
   async processEvent(event: Event) {
-    const monthYear = this.monthYear(event)
+    const monthYear = this.validateMonthYear(event)
     const transactions = await this.findTransactions(monthYear)
     const expenses = await this.findExpenses(monthYear)
     const transactionsWithExpenses = this.associate(transactions, expenses)
     return this.response(200, { transactions: transactionsWithExpenses })
-  }
-
-  private monthYear(event: Event) {
-    const year = event.queryStringParameters?.year
-    const month = event.queryStringParameters?.month
-
-    if (!year) throw new Error('Missing "year" query parameter')
-    if (!month) throw new Error('Missing "month" query parameter')
-
-    return {
-      year: parseInt(year),
-      month: parseInt(month)
-    }
   }
 
   private async findTransactions(monthYear: types.MonthYear) {

@@ -100,3 +100,13 @@ export interface AccwebTransaction {
 export interface AccwebFinancialProduct {
   name: string
 }
+
+export interface TransactionSummary {
+  month: number
+  year: number
+  amounts: {
+    [category: string]: {
+      [subcategory: string]: number
+    }
+  }
+}

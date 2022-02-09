@@ -52,6 +52,19 @@ export abstract class Handler {
     if (event.body === undefined) throw new Error("Payload not found.")
   }
 
+  validateMonthYear(event: Event) {
+    const year = event.queryStringParameters?.year
+    const month = event.queryStringParameters?.month
+
+    if (!year) throw new Error('Missing "year" query parameter')
+    if (!month) throw new Error('Missing "month" query parameter')
+
+    return {
+      year: parseInt(year),
+      month: parseInt(month)
+    }
+  }
+
   private parseBody(event: Event): Event {
     if (event.body) {
       return { ...event, body: JSON.parse(event.body) }

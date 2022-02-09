@@ -69,19 +69,11 @@ describe("FindTransactionSummaryHandler", () => {
         expect(response.statusCode).toEqual(200)
       })
 
-      it("returns the correct summary", async () => {
+      it("summarizes the correct month", async () => {
         const response = await subject.call(event)
 
-        expect(JSON.parse(response.body).transactionSummary).toEqual({
-          month: 11,
-          year: 2000,
-          amounts: {
-            food: {
-              grocery: 1050,
-              other: 5000
-            },
-            other: 0
-          }
+        expect(JSON.parse(response.body)).toEqual({
+          transactionSummary: expect.objectContaining({ month: 11, year: 2000 })
         })
       })
     })
