@@ -1,19 +1,19 @@
-const CATEGORIES = new Map([
-  // categories
-  ["Alimentation", "Food"],
-  ["Loisirs", "Entertainment"],
-  ["Habitation", "Housing"],
-  ["Santé", "Health"],
-  ["Transport", "Transport"],
+import * as types from "@shared/types"
 
-  // subcategories
-  ["Épicerie", "Grocery"],
-  ["Restaurants", "Restaurants"],
-  ["Mobilier et décoration", "Furniture"],
-  ["Boissons alcoolisées", "Alcool"],
-  ["Pharmacie/Médicaments", "Pharmacy"],
-  ["Vêtements", "Clothing"],
-  ["Soins médicaux", "Healthcare"]
-])
+export const categoryMap: { [key: string]: types.Category } = {
+  Alimentation: "FOOD",
+  Loisirs: "ENTERTAINMENT",
+  Habitation: "HOUSING",
+  Santé: "HEALTH",
+  Transport: "TRANSPORT"
+}
 
-export const map = CATEGORIES
+export const subcategoryMap: { [key: string]: types.Subcategory } = {
+  Épicerie: "GROCERY",
+  Restaurants: "RESTAURANT",
+  "Mobilier et décoration": "FURNITURE",
+  "Boissons alcoolisées": "ALCOOL",
+  "Pharmacie/Médicaments": "PHARMACY",
+  Vêtements: "CLOTHING",
+  "Soins médicaux": "HEALTHCARE"
+}

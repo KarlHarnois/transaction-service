@@ -3,6 +3,23 @@ export interface MonthYear {
   year: number
 }
 
+export type Category =
+  | "FOOD"
+  | "ENTERTAINMENT"
+  | "HOUSING"
+  | "HEALTH"
+  | "TRANSPORT"
+
+export type Subcategory =
+  | "GROCERY"
+  | "RESTAURANT"
+  | "FURNITURE"
+  | "ALCOOL"
+  | "PHARMACY"
+  | "CLOTHING"
+  | "HEALTHCARE"
+  | "MTG"
+
 export interface TransactionSource {
   name: string
   last4?: string
@@ -12,8 +29,8 @@ export interface Transaction {
   id: string
   description: string
   fullDescription: string
-  category?: string
-  subcategory?: string
+  category?: Category
+  subcategory?: Subcategory
   centAmount: number
   currency: string
   currencyCentAmount: number
