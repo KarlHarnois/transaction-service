@@ -1,4 +1,3 @@
-import * as path from "path"
 import * as core from "@aws-cdk/core"
 import * as apigateway from "@aws-cdk/aws-apigateway"
 import * as lambdaNodejs from "@aws-cdk/aws-lambda-nodejs"
@@ -12,19 +11,18 @@ export interface CreateSessionLambdaProps {
 export class CreateSessionLambda extends Lambda {
   constructor(scope: core.Construct, props: CreateSessionLambdaProps) {
     super()
-    const lambda = this.createLambda(scope, props)
-    const integration = this.createIntegration(lambda)
-    const method = this.createMethod(integration, props)
-  }
 
-  private createLambda(scope: core.Construct, props: CreateSessionLambdaProps) {
-    return new lambdaNodejs.NodejsFunction(scope, "CreateSessionLambda", {
-      entry: this.handlerPath("create-session"),
-      timeout: core.Duration.seconds(90),
-      environment: {
+    const lambda = this.createLambda({
+      scope,
+      construct: "CreateSessionLambda",
+      handler: "create-session",
+      env: {
         AUTH_TOKEN_SECRET: props.tokenSecret
       }
     })
+
+    const integration = this.createIntegration(lambda)
+    const method = this.createMethod(integration, props)
   }
 
   private createIntegration(lambda: lambdaNodejs.NodejsFunction) {

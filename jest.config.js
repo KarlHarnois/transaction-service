@@ -10,6 +10,6 @@ module.exports = {
     "@handlers/(.*)": "<rootDir>/src/handlers/$1",
     "@shared/(.*)": "<rootDir>/src/shared/$1",
     "@lib/(.*)": "<rootDir>/lib/$1",
-    "@test/(.*)": "<rootDir>/test/$1",
+    "@test/(.*)": "<rootDir>/test/$1"
   }
 }

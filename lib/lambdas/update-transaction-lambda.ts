@@ -1,4 +1,3 @@
-import * as path from "path"
 import * as core from "@aws-cdk/core"
 import * as apigateway from "@aws-cdk/aws-apigateway"
 import * as lambdaNodejs from "@aws-cdk/aws-lambda-nodejs"
@@ -15,24 +14,19 @@ export interface UpdateTransactionLambdaProps {
 export class UpdateTransactionLambda extends Lambda {
   constructor(scope: core.Construct, props: UpdateTransactionLambdaProps) {
     super()
-    const lambda = this.createLambda(scope, props)
-    const integration = this.createIntegration(lambda)
-    const method = this.createMethod(integration, props)
-    props.table.grantReadWriteData(lambda)
-  }
 
-  private createLambda(
-    scope: core.Construct,
-    props: UpdateTransactionLambdaProps
-  ) {
-    return new lambdaNodejs.NodejsFunction(scope, "UpdateTransactionLambda", {
-      entry: this.handlerPath("update-transaction"),
-      timeout: core.Duration.seconds(90),
-      memorySize: 1024,
-      environment: {
+    const lambda = this.createLambda({
+      scope,
+      construct: "UpdateTransactionLambda",
+      handler: "update-transaction",
+      env: {
         TABLE_NAME: props.table.tableName
       }
     })
+
+    const integration = this.createIntegration(lambda)
+    const method = this.createMethod(integration, props)
+    props.table.grantReadWriteData(lambda)
   }
 
   private createIntegration(lambda: lambdaNodejs.NodejsFunction) {

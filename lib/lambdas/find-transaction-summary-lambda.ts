@@ -13,35 +13,26 @@ export interface FindTransactionSummaryLambdaProps {
 export class FindTransactionSummaryLambda extends Lambda {
   constructor(scope: core.Construct, props: FindTransactionSummaryLambdaProps) {
     super()
-    const lambda = this.createLambda(scope, props)
+
+    const lambda = this.createLambda({
+      scope,
+      construct: "FindTransactionSummaryLambda",
+      handler: "find-transaction-summary",
+      env: {
+        TABLE_NAME: props.table.tableName
+      }
+    })
+
     const integration = this.createIntegration(lambda)
     const method = this.createMethod(integration, props)
     props.table.grantReadData(lambda)
   }
 
-  private createLambda(
-    scope: core.Construct,
-    props: FindTransactionSummaryLambdaProps
-  ) {
-    return new lambdaNodejs.NodejsFunction(
-      scope,
-      "FindTransactionSummaryLambda",
-      {
-        entry: this.handlerPath("find-transaction-summary"),
-        timeout: core.Duration.seconds(90),
-        memorySize: 1024,
-        environment: {
-          TABLE_NAME: props.table.tableName
-        }
-      }
-    )
-  }
-
   private createIntegration(lambda: lambdaNodejs.NodejsFunction) {
     return new apigateway.LambdaIntegration(lambda, {
       requestParameters: {
-        "integration.request.querystring.year": this.yearQueryParam,
-        "integration.request.querystring.month": this.monthQueryParam
+        "integration.request.querystring.year": this.YEAR_QUERY_PARAM,
+        "integration.request.querystring.month": this.MONTH_QUERY_PARAM
       },
       requestTemplates: {
         "application/json": '{ "statusCode": "200" }'
@@ -59,8 +50,8 @@ export class FindTransactionSummaryLambda extends Lambda {
       authorizer: props.authorizer,
       apiKeyRequired: true,
       requestParameters: {
-        [this.yearQueryParam]: true,
-        [this.monthQueryParam]: true
+        [this.YEAR_QUERY_PARAM]: true,
+        [this.MONTH_QUERY_PARAM]: true
       }
     })
   }
