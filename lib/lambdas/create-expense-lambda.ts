@@ -1,6 +1,5 @@
 import * as core from "@aws-cdk/core"
 import * as apigateway from "@aws-cdk/aws-apigateway"
-import * as lambdaNodejs from "@aws-cdk/aws-lambda-nodejs"
 import * as dynamodb from "@aws-cdk/aws-dynamodb"
 import { Lambda } from "./lambda"
 
@@ -28,14 +27,6 @@ export class CreateExpenseLambda extends Lambda {
     const integration = this.createIntegration(lambda)
     const method = this.createMethod(integration, props)
     props.table.grantReadWriteData(lambda)
-  }
-
-  private createIntegration(lambda: lambdaNodejs.NodejsFunction) {
-    return new apigateway.LambdaIntegration(lambda, {
-      requestTemplates: {
-        "application/json": '{ "statusCode": "200" }'
-      }
-    })
   }
 
   private createMethod(

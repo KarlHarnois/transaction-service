@@ -29,14 +29,6 @@ export class UpdateTransactionLambda extends Lambda {
     props.table.grantReadWriteData(lambda)
   }
 
-  private createIntegration(lambda: lambdaNodejs.NodejsFunction) {
-    return new apigateway.LambdaIntegration(lambda, {
-      requestTemplates: {
-        "application/json": '{ "statusCode": "200" }'
-      }
-    })
-  }
-
   private createMethod(
     integration: apigateway.Integration,
     props: UpdateTransactionLambdaProps

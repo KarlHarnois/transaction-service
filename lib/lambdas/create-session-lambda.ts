@@ -1,6 +1,5 @@
 import * as core from "@aws-cdk/core"
 import * as apigateway from "@aws-cdk/aws-apigateway"
-import * as lambdaNodejs from "@aws-cdk/aws-lambda-nodejs"
 import { Lambda } from "./lambda"
 
 export interface CreateSessionLambdaProps {
@@ -23,14 +22,6 @@ export class CreateSessionLambda extends Lambda {
 
     const integration = this.createIntegration(lambda)
     const method = this.createMethod(integration, props)
-  }
-
-  private createIntegration(lambda: lambdaNodejs.NodejsFunction) {
-    return new apigateway.LambdaIntegration(lambda, {
-      requestTemplates: {
-        "application/json": '{ "statusCode": "200" }'
-      }
-    })
   }
 
   private createMethod(

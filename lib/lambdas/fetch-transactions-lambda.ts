@@ -24,21 +24,12 @@ export class FetchTransactionsLambda extends Lambda {
       }
     })
 
-    const integration = this.createIntegration(lambda)
+    const integration = this.createIntegration(lambda, {
+      monthYearQueryParams: true
+    })
+
     const method = this.createMethod(integration, props)
     props.table.grantReadData(lambda)
-  }
-
-  private createIntegration(lambda: lambdaNodejs.NodejsFunction) {
-    return new apigateway.LambdaIntegration(lambda, {
-      requestParameters: {
-        "integration.request.querystring.year": this.YEAR_QUERY_PARAM,
-        "integration.request.querystring.month": this.MONTH_QUERY_PARAM
-      },
-      requestTemplates: {
-        "application/json": '{ "statusCode": "200" }'
-      }
-    })
   }
 
   private createMethod(

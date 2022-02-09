@@ -1,4 +1,5 @@
 import * as lambdaNodejs from "@aws-cdk/aws-lambda-nodejs"
+import * as apigateway from "@aws-cdk/aws-apigateway"
 import * as core from "@aws-cdk/core"
 import * as path from "path"
 
@@ -22,7 +23,28 @@ export class Lambda {
     })
   }
 
+  createIntegration(
+    lambda: lambdaNodejs.NodejsFunction,
+    args: { monthYearQueryParams: boolean } = { monthYearQueryParams: false }
+  ) {
+    return new apigateway.LambdaIntegration(lambda, {
+      requestTemplates: {
+        "application/json": '{ "statusCode": "200" }',
+      },
+      ...(args.monthYearQueryParams && this.monthYearRequestParams)
+    })
+  }
+
   handlerPath(dirname: string) {
     return `${path.resolve(__dirname)}/../../src/handlers/${dirname}/handler.ts`
+  }
+
+  private get monthYearRequestParams() {
+    return {
+      requestParameters: {
+        "integration.request.querystring.year": this.YEAR_QUERY_PARAM,
+        "integration.request.querystring.month": this.MONTH_QUERY_PARAM
+      }
+    }
   }
 }
