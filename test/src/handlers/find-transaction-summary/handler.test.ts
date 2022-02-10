@@ -1,5 +1,4 @@
 import { FindTransactionSummaryHandler } from "@handlers/find-transaction-summary/handler"
-import * as queries from "@shared/persistence/datasource-query"
 import * as factories from "@test/factories"
 import * as mocks from "@test/mocks"
 

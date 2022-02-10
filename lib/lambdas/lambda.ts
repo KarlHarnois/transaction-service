@@ -29,7 +29,7 @@ export class Lambda {
   ) {
     return new apigateway.LambdaIntegration(lambda, {
       requestTemplates: {
-        "application/json": '{ "statusCode": "200" }',
+        "application/json": '{ "statusCode": "200" }'
       },
       ...(args.monthYearQueryParams && this.monthYearRequestParams)
     })
