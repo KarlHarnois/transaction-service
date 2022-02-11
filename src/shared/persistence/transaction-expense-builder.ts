@@ -15,7 +15,10 @@ export class TransactionExpenseBuilder {
 
     return this.props.transactions.map((txn) => {
       const expenses = hash[txn.id] ?? []
-      return { expenses, ...txn }
+      const centAmountWithExpenses =
+        txn.centAmount - this.expenseTotal(expenses)
+
+      return { expenses, centAmountWithExpenses, ...txn }
     })
   }
 
@@ -29,5 +32,11 @@ export class TransactionExpenseBuilder {
     })
 
     return result
+  }
+
+  private expenseTotal(expenses: types.Expense[]) {
+    return expenses.reduce((acc, expense) => {
+      return acc + expense.centAmount
+    }, 0)
   }
 }

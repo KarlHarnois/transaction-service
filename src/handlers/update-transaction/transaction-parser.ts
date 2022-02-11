@@ -1,14 +1,15 @@
 import { IdGenerator } from "@shared/persistence/id-generator"
+import { Middleware } from "./transaction-parser-middlewares/middleware"
+import { categoryMap, subcategoryMap } from "./categories"
+
 import {
   Transaction,
   TransactionSource,
   AccwebTransaction
 } from "@shared/types"
-import { Middleware } from "./transaction-parser-middlewares/middleware"
 
 export interface TransactionParserProps {
   sourceName: string
-  categoryMap: Map<string, string>
   middlewares?: Middleware[]
 }
 
@@ -29,7 +30,7 @@ export class TransactionParser {
       description: transaction.descriptionSimplifiee,
       fullDescription: transaction.descriptionCourte,
       category: this.parseCategory(transaction.categorieParentTransaction),
-      subcategory: this.parseCategory(transaction.categorieTransaction),
+      subcategory: this.parseSubcategory(transaction.categorieTransaction),
       centAmount: this.parseCentAmount(transaction.montantTransaction),
       currency: transaction.devise,
       currencyCentAmount: this.parseCurrencyAmount(transaction),
@@ -57,12 +58,12 @@ export class TransactionParser {
     return result
   }
 
-  private parseCategory(category?: string): string | undefined {
-    if (category) {
-      return this.props.categoryMap.get(category)
-    } else {
-      return undefined
-    }
+  private parseCategory(category?: string) {
+    return category ? categoryMap[category] : undefined
+  }
+
+  private parseSubcategory(subcategory?: string) {
+    return subcategory ? subcategoryMap[subcategory] : undefined
   }
 
   private parseCentAmount(amount: string): number {

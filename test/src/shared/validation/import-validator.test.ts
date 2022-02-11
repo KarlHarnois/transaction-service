@@ -1,5 +1,5 @@
 import { ImportValidator } from "@shared/validation/import-validator"
-import * as factories from "../../factories"
+import * as factories from "@test/factories"
 
 describe("ImportValidator", () => {
   const subject = new ImportValidator()

@@ -4,21 +4,20 @@ import * as lambdaNodejs from "@aws-cdk/aws-lambda-nodejs"
 import * as dynamodb from "@aws-cdk/aws-dynamodb"
 import { Lambda } from "./lambda"
 
-export interface FetchTransactionsLambdaProps {
-  resource: apigateway.Resource
+export interface FindTransactionSummaryLambdaProps {
   authorizer: apigateway.Authorizer
   api: apigateway.RestApi
   table: dynamodb.Table
 }
 
-export class FetchTransactionsLambda extends Lambda {
-  constructor(scope: core.Construct, props: FetchTransactionsLambdaProps) {
+export class FindTransactionSummaryLambda extends Lambda {
+  constructor(scope: core.Construct, props: FindTransactionSummaryLambdaProps) {
     super()
 
     const lambda = this.createLambda({
       scope,
-      construct: "FetchTransactionsLambda",
-      handler: "fetch-transactions",
+      construct: "FindTransactionSummaryLambda",
+      handler: "find-transaction-summary",
       env: {
         TABLE_NAME: props.table.tableName
       }
@@ -34,9 +33,11 @@ export class FetchTransactionsLambda extends Lambda {
 
   private createMethod(
     integration: apigateway.Integration,
-    props: FetchTransactionsLambdaProps
+    props: FindTransactionSummaryLambdaProps
   ) {
-    return props.resource.addMethod("GET", integration, {
+    const resource = props.api.root.addResource("transaction_summaries")
+
+    return resource.addMethod("GET", integration, {
       authorizer: props.authorizer,
       apiKeyRequired: true,
       requestParameters: {

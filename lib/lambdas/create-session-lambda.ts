@@ -1,38 +1,27 @@
-import * as path from "path"
 import * as core from "@aws-cdk/core"
 import * as apigateway from "@aws-cdk/aws-apigateway"
-import * as lambdaNodejs from "@aws-cdk/aws-lambda-nodejs"
+import { Lambda } from "./lambda"
 
 export interface CreateSessionLambdaProps {
   tokenSecret: string
   api: apigateway.RestApi
 }
 
-export class CreateSessionLambda {
+export class CreateSessionLambda extends Lambda {
   constructor(scope: core.Construct, props: CreateSessionLambdaProps) {
-    const lambda = this.createLambda(scope, props)
-    const integration = this.createIntegration(lambda)
-    const method = this.createMethod(integration, props)
-  }
+    super()
 
-  private createLambda(scope: core.Construct, props: CreateSessionLambdaProps) {
-    return new lambdaNodejs.NodejsFunction(scope, "CreateSessionLambda", {
-      entry: `${path.resolve(
-        __dirname
-      )}/../../src/lambdas/create-session/handler.ts`,
-      timeout: core.Duration.seconds(90),
-      environment: {
+    const lambda = this.createLambda({
+      scope,
+      construct: "CreateSessionLambda",
+      handler: "create-session",
+      env: {
         AUTH_TOKEN_SECRET: props.tokenSecret
       }
     })
-  }
 
-  private createIntegration(lambda: lambdaNodejs.NodejsFunction) {
-    return new apigateway.LambdaIntegration(lambda, {
-      requestTemplates: {
-        "application/json": '{ "statusCode": "200" }'
-      }
-    })
+    const integration = this.createIntegration(lambda)
+    const method = this.createMethod(integration, props)
   }
 
   private createMethod(

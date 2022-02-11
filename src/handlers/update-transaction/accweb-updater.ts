@@ -2,7 +2,6 @@ import { TransactionRepository } from "@shared/persistence/transaction-repositor
 import { AccwebUpdatePayload } from "@shared/networking/transaction-service-client"
 import { TransactionParser } from "./transaction-parser"
 import { allMiddlewares } from "./transaction-parser-middlewares"
-import { map } from "./categories"
 
 export class AccwebUpdater {
   private readonly repo
@@ -21,7 +20,6 @@ export class AccwebUpdater {
   private createParser(payload: AccwebUpdatePayload) {
     return new TransactionParser({
       sourceName: payload.sourceName,
-      categoryMap: map,
       middlewares: allMiddlewares
     })
   }

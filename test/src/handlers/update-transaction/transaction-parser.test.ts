@@ -1,13 +1,11 @@
-import { TransactionParser } from "@lambdas/update-transaction/transaction-parser"
-import { allMiddlewares } from "@lambdas/update-transaction/transaction-parser-middlewares/index"
-import { map } from "@lambdas/update-transaction/categories"
-import * as fixtures from "../../fixtures"
+import { TransactionParser } from "@handlers/update-transaction/transaction-parser"
+import { allMiddlewares } from "@handlers/update-transaction/transaction-parser-middlewares/index"
+import * as fixtures from "@test/fixtures"
 
 describe("TransactionParser", () => {
   describe("parseMany", () => {
     const subject = new TransactionParser({
       sourceName: "Visa",
-      categoryMap: map,
       middlewares: allMiddlewares
     })
 
@@ -23,13 +21,13 @@ describe("TransactionParser", () => {
 
     it("parses the categories", () => {
       expect(transactions.map((t) => t.category)).toEqual([
-        "Food",
-        "Entertainment"
+        "FOOD",
+        "ENTERTAINMENT"
       ])
     })
 
     it("parses the subcategories", () => {
-      expect(transactions.map((t) => t.subcategory)).toEqual(["Grocery", "MTG"])
+      expect(transactions.map((t) => t.subcategory)).toEqual(["GROCERY", "MTG"])
     })
 
     it("parses the amounts", () => {

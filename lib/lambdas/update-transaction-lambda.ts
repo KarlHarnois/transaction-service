@@ -1,8 +1,8 @@
-import * as path from "path"
 import * as core from "@aws-cdk/core"
 import * as apigateway from "@aws-cdk/aws-apigateway"
 import * as lambdaNodejs from "@aws-cdk/aws-lambda-nodejs"
 import * as dynamodb from "@aws-cdk/aws-dynamodb"
+import { Lambda } from "./lambda"
 
 export interface UpdateTransactionLambdaProps {
   resource: apigateway.Resource
@@ -11,37 +11,22 @@ export interface UpdateTransactionLambdaProps {
   table: dynamodb.Table
 }
 
-export class UpdateTransactionLambda {
+export class UpdateTransactionLambda extends Lambda {
   constructor(scope: core.Construct, props: UpdateTransactionLambdaProps) {
-    const lambda = this.createLambda(scope, props)
-    const integration = this.createIntegration(lambda)
-    const method = this.createMethod(integration, props)
+    super()
 
-    props.table.grantReadWriteData(lambda)
-  }
-
-  private createLambda(
-    scope: core.Construct,
-    props: UpdateTransactionLambdaProps
-  ) {
-    return new lambdaNodejs.NodejsFunction(scope, "UpdateTransactionLambda", {
-      entry: `${path.resolve(
-        __dirname
-      )}/../../src/lambdas/update-transaction/handler.ts`,
-      timeout: core.Duration.seconds(90),
-      memorySize: 1024,
-      environment: {
+    const lambda = this.createLambda({
+      scope,
+      construct: "UpdateTransactionLambda",
+      handler: "update-transaction",
+      env: {
         TABLE_NAME: props.table.tableName
       }
     })
-  }
 
-  private createIntegration(lambda: lambdaNodejs.NodejsFunction) {
-    return new apigateway.LambdaIntegration(lambda, {
-      requestTemplates: {
-        "application/json": '{ "statusCode": "200" }'
-      }
-    })
+    const integration = this.createIntegration(lambda)
+    const method = this.createMethod(integration, props)
+    props.table.grantReadWriteData(lambda)
   }
 
   private createMethod(

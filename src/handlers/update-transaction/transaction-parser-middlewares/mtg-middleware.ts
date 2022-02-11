@@ -19,7 +19,7 @@ export class MTGMiddleware implements Middleware {
       this.isInStoreTransaction(transaction) ||
       this.isPaypalMtgTransaction(transaction)
     ) {
-      transaction.category = "Entertainment"
+      transaction.category = "ENTERTAINMENT"
       transaction.subcategory = "MTG"
     }
     return transaction

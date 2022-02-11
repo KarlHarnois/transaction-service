@@ -1,5 +1,4 @@
 import { AuthToken, Payload } from "@shared/auth-token"
-import { decode } from "punycode"
 
 describe("AuthToken", () => {
   const secret = "123456"

@@ -1,6 +1,6 @@
-import { FetchTransactionsHandler } from "@lambdas/fetch-transactions/handler"
-import * as factories from "../../factories"
-import * as mocks from "../../mocks"
+import { FetchTransactionsHandler } from "@handlers/fetch-transactions/handler"
+import * as factories from "@test/factories"
+import * as mocks from "@test/mocks"
 
 describe("FetchTransactionsHandler", () => {
   let subject: FetchTransactionsHandler
