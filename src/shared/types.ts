@@ -19,6 +19,7 @@ export const ALL_SUBCATEGORIES = [
   "PHARMACY",
   "CLOTHING",
   "HEALTHCARE",
+  "COFFEE",
   "MTG"
 ] as const
 

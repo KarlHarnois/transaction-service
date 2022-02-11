@@ -36,5 +36,18 @@ export const accwebTransactions: AccwebTransaction[] = [
     devise: "CAD",
     numeroCarteMasque: "2121 21** **** 0000",
     codeRelation: "P"
+  },
+  {
+    identifiant: "id-3",
+    numeroSequence: "3",
+    dateInscription: "2021-10-22",
+    montantTransaction: "88.21",
+    typeTransaction: "AutreAutorisation",
+    descriptionCourte: "CAFE ECLAIR",
+    descriptionSimplifiee: "Cafe Eclair",
+    dateTransaction: "2021-10-20T20:02:43Z",
+    devise: "CAD",
+    numeroCarteMasque: "2121 21** **** 0000",
+    codeRelation: "P"
   }
 ]
