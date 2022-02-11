@@ -1,9 +1,7 @@
 import { DynamoDBSource, DataSource } from "@shared/persistence/datasource"
+import { PersistedTransactionExpenseRepository } from "@shared/persistence/transaction-expense-repository"
 import { env, Logger } from "@shared/utils"
 import { Handler, Event } from "../handler"
-import { PersistedTransactionRepository } from "@shared/persistence/transaction-repository"
-import { PersistedExpenseRepository } from "@shared/persistence/expense-repository"
-import { TransactionExpenseBuilder } from "@shared/persistence/transaction-expense-builder"
 import * as types from "@shared/types"
 
 export class FetchTransactionsHandler extends Handler {
@@ -21,27 +19,12 @@ export class FetchTransactionsHandler extends Handler {
   async processEvent(event: Event) {
     const monthYear = this.validateMonthYear(event)
     const transactions = await this.findTransactions(monthYear)
-    const expenses = await this.findExpenses(monthYear)
-    const transactionsWithExpenses = this.associate(transactions, expenses)
-    return this.response(200, { transactions: transactionsWithExpenses })
+    return this.response(200, { transactions })
   }
 
   private async findTransactions(monthYear: types.MonthYear) {
-    const repo = new PersistedTransactionRepository(this.props)
+    const repo = new PersistedTransactionExpenseRepository(this.props)
     return await repo.findMany(monthYear)
-  }
-
-  private async findExpenses(monthYear: types.MonthYear) {
-    const repo = new PersistedExpenseRepository(this.props)
-    return await repo.findMany(monthYear)
-  }
-
-  private associate(
-    transactions: types.Transaction[],
-    expenses: types.ExpenseWithTransactionDetails[]
-  ) {
-    const builder = new TransactionExpenseBuilder({ expenses, transactions })
-    return builder.assignExpenses()
   }
 }
 

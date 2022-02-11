@@ -1,6 +1,7 @@
 import { FindTransactionSummaryHandler } from "@handlers/find-transaction-summary/handler"
 import * as factories from "@test/factories"
 import * as mocks from "@test/mocks"
+import { kill } from "process"
 
 describe("FindTransactionSummaryHandler", () => {
   let subject: FindTransactionSummaryHandler
@@ -73,6 +74,23 @@ describe("FindTransactionSummaryHandler", () => {
 
         expect(JSON.parse(response.body)).toEqual({
           transactionSummary: expect.objectContaining({ month: 11, year: 2000 })
+        })
+      })
+
+      it("summarizes the amounts", async () => {
+        const response = await subject.call(event)
+
+        expect(JSON.parse(response.body)).toEqual({
+          transactionSummary: expect.objectContaining({
+            centAmounts: {
+              food: {
+                grocery: 1050,
+                other: 3000
+              },
+              other: -5000,
+              total: -950
+            }
+          })
         })
       })
     })

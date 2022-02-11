@@ -3,22 +3,27 @@ export interface MonthYear {
   year: number
 }
 
-export type Category =
-  | "FOOD"
-  | "ENTERTAINMENT"
-  | "HOUSING"
-  | "HEALTH"
-  | "TRANSPORT"
+export const ALL_CATEGORIES = [
+  "FOOD",
+  "ENTERTAINMENT",
+  "HOUSING",
+  "HEALTH",
+  "TRANSPORT"
+] as const
 
-export type Subcategory =
-  | "GROCERY"
-  | "RESTAURANT"
-  | "FURNITURE"
-  | "ALCOOL"
-  | "PHARMACY"
-  | "CLOTHING"
-  | "HEALTHCARE"
-  | "MTG"
+export const ALL_SUBCATEGORIES = [
+  "GROCERY",
+  "RESTAURANT",
+  "FURNITURE",
+  "ALCOOL",
+  "PHARMACY",
+  "CLOTHING",
+  "HEALTHCARE",
+  "MTG"
+] as const
+
+export type Category = typeof ALL_CATEGORIES[number]
+export type Subcategory = typeof ALL_SUBCATEGORIES[number]
 
 export interface TransactionSource {
   name: string
@@ -42,6 +47,7 @@ export interface Transaction {
 }
 
 export interface TransactionWithExpense extends Transaction {
+  centAmountWithExpenses: number
   expenses: Expense[]
 }
 
@@ -104,9 +110,5 @@ export interface AccwebFinancialProduct {
 export interface TransactionSummary {
   month: number
   year: number
-  amounts: {
-    [category: string]: {
-      [subcategory: string]: number
-    }
-  }
+  centAmounts: any
 }

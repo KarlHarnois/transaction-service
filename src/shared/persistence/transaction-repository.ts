@@ -1,11 +1,11 @@
-import { Transaction } from "@shared/types"
+import { Transaction, MonthYear } from "@shared/types"
 import { DataSource } from "./datasource"
 import * as queries from "./datasource-query"
 import * as mutations from "./datasource-mutation"
 
 export interface TransactionRepository {
   find(id: string): Promise<Transaction | undefined>
-  findMany(args: { year: number; month: number }): Promise<Transaction[]>
+  findMany(monthYear: MonthYear): Promise<Transaction[]>
   persist(transaction: Transaction): Promise<Transaction>
 }
 
@@ -21,7 +21,7 @@ export class InMemoryTransactionRepository implements TransactionRepository {
     return Promise.resolve(result)
   }
 
-  findMany(args: { year: number; month: number }) {
+  findMany(monthYear: MonthYear) {
     return Promise.resolve(this.transactions)
   }
 
@@ -54,11 +54,11 @@ export class PersistedTransactionRepository implements TransactionRepository {
     return result.items[0]?.jsonObject
   }
 
-  async findMany(args: { year: number; month: number }) {
+  async findMany(monthYear: MonthYear) {
     const query = new queries.QueryByMonthYear({
       tableName: this.props.tableName,
       type: "txn",
-      ...args
+      ...monthYear
     })
     const result = await this.props.dataSource.performQuery(query)
     return result.items.map((item) => item.jsonObject)
