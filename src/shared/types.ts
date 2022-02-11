@@ -8,7 +8,9 @@ export const ALL_CATEGORIES = [
   "ENTERTAINMENT",
   "HOUSING",
   "HEALTH",
-  "TRANSPORT"
+  "TRANSPORT",
+  "UTILITIES",
+  "MISC"
 ] as const
 
 export const ALL_SUBCATEGORIES = [
@@ -19,8 +21,11 @@ export const ALL_SUBCATEGORIES = [
   "PHARMACY",
   "CLOTHING",
   "HEALTHCARE",
+  "SUBSCRIPTION",
   "COFFEE",
-  "MTG"
+  "PHONE",
+  "MTG",
+  "HAIRCUT"
 ] as const
 
 export type Category = typeof ALL_CATEGORIES[number]

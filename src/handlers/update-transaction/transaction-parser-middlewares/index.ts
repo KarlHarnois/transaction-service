@@ -4,8 +4,12 @@ import { KeywordMapMiddleware } from "./keyword-map-middleware"
 
 export const allMiddlewares: Middleware[] = [
   new MTGMiddleware(),
+
   new KeywordMapMiddleware({
     cafe: { category: "FOOD", subcategory: "COFFEE" },
-    coffee: { category: "FOOD", subcategory: "COFFEE" }
+    coffee: { category: "FOOD", subcategory: "COFFEE" },
+    "bonjour sante": { category: "HEALTH", subcategory: "SUBSCRIPTION" },
+    maisonvirgn: { category: "UTILITIES", subcategory: "PHONE" },
+    barber: { category: "MISC", subcategory: "HAIRCUT" }
   })
 ]
