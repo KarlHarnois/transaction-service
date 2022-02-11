@@ -1,8 +1,11 @@
 import { MTGMiddleware } from "./mtg-middleware"
 import { Middleware } from "./middleware"
-import { CoffeeMiddleware } from "./coffee-middleware"
+import { KeywordMapMiddleware } from "./keyword-map-middleware"
 
 export const allMiddlewares: Middleware[] = [
   new MTGMiddleware(),
-  new CoffeeMiddleware()
+  new KeywordMapMiddleware({
+    cafe: { category: "FOOD", subcategory: "COFFEE" },
+    coffee: { category: "FOOD", subcategory: "COFFEE" }
+  })
 ]
