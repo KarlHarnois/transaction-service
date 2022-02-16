@@ -1,0 +1,364 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "AccwebFinancialProduct": {
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "AccwebImport": {
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "number": {
+                    "type": "number"
+                }
+            },
+            "type": "object"
+        },
+        "AccwebTransaction": {
+            "properties": {
+                "categorieParentTransaction": {
+                    "type": "string"
+                },
+                "categorieTransaction": {
+                    "type": "string"
+                },
+                "codeRelation": {
+                    "type": "string"
+                },
+                "codeSousTypeTransaction": {
+                    "type": "string"
+                },
+                "dateInscription": {
+                    "type": "string"
+                },
+                "dateTransaction": {
+                    "type": "string"
+                },
+                "descriptionCourte": {
+                    "type": "string"
+                },
+                "descriptionSimplifiee": {
+                    "type": "string"
+                },
+                "devise": {
+                    "type": "string"
+                },
+                "idCategorieParentTransaction": {
+                    "type": "number"
+                },
+                "idCategorieTransaction": {
+                    "type": "number"
+                },
+                "identifiant": {
+                    "type": "string"
+                },
+                "indicateurCategorieTransactionAutre": {
+                    "type": "boolean"
+                },
+                "indicateurTransactionRecurrente": {
+                    "type": "boolean"
+                },
+                "montantDevise": {
+                    "type": "string"
+                },
+                "montantRecompense": {
+                    "type": "string"
+                },
+                "montantTransaction": {
+                    "type": "string"
+                },
+                "numeroCarteMasque": {
+                    "type": "string"
+                },
+                "numeroSequence": {
+                    "type": "string"
+                },
+                "tauxProgrammeRecompense": {
+                    "type": "string"
+                },
+                "typeTransaction": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "Category": {
+            "enum": [
+                "ENTERTAINMENT",
+                "FOOD",
+                "HEALTH",
+                "HOUSING",
+                "MISC",
+                "TRANSFER",
+                "TRANSPORT",
+                "UTILITIES"
+            ],
+            "type": "string"
+        },
+        "Credentials": {
+            "properties": {
+                "cardNumber": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "questions": {
+                    "items": {
+                        "$ref": "#/definitions/DefiQuestion"
+                    },
+                    "type": "array"
+                }
+            },
+            "type": "object"
+        },
+        "DefiQuestion": {
+            "properties": {
+                "answer": {
+                    "type": "string"
+                },
+                "rawValue": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "Expense": {
+            "properties": {
+                "centAmount": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "ExpenseWithTransactionDetails": {
+            "properties": {
+                "centAmount": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "transactionDetails": {
+                    "properties": {
+                        "authorizedAt": {
+                            "type": "number"
+                        },
+                        "id": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "MonthYear": {
+            "properties": {
+                "month": {
+                    "type": "number"
+                },
+                "year": {
+                    "type": "number"
+                }
+            },
+            "type": "object"
+        },
+        "Subcategory": {
+            "enum": [
+                "ALCOOL",
+                "CAR_RENTAL",
+                "CLOTHING",
+                "COFFEE",
+                "FURNITURE",
+                "GROCERY",
+                "HAIRCUT",
+                "HEALTHCARE",
+                "MTG",
+                "PHARMACY",
+                "PHONE",
+                "RESTAURANT",
+                "SUBSCRIPTION"
+            ],
+            "type": "string"
+        },
+        "Transaction": {
+            "properties": {
+                "category": {
+                    "enum": [
+                        "ENTERTAINMENT",
+                        "FOOD",
+                        "HEALTH",
+                        "HOUSING",
+                        "MISC",
+                        "TRANSFER",
+                        "TRANSPORT",
+                        "UTILITIES"
+                    ],
+                    "type": "string"
+                },
+                "centAmount": {
+                    "type": "number"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "currencyCentAmount": {
+                    "type": "number"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "fullDescription": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "source": {
+                    "$ref": "#/definitions/TransactionSource"
+                },
+                "subcategory": {
+                    "enum": [
+                        "ALCOOL",
+                        "CAR_RENTAL",
+                        "CLOTHING",
+                        "COFFEE",
+                        "FURNITURE",
+                        "GROCERY",
+                        "HAIRCUT",
+                        "HEALTHCARE",
+                        "MTG",
+                        "PHARMACY",
+                        "PHONE",
+                        "RESTAURANT",
+                        "SUBSCRIPTION"
+                    ],
+                    "type": "string"
+                },
+                "timestamps": {
+                    "properties": {
+                        "authorizedAt": {
+                            "type": "number"
+                        },
+                        "postedAt": {
+                            "type": "number"
+                        }
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "TransactionSource": {
+            "properties": {
+                "last4": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "TransactionSummary": {
+            "properties": {
+                "centAmounts": {},
+                "month": {
+                    "type": "number"
+                },
+                "year": {
+                    "type": "number"
+                }
+            },
+            "type": "object"
+        },
+        "TransactionWithExpense": {
+            "properties": {
+                "category": {
+                    "enum": [
+                        "ENTERTAINMENT",
+                        "FOOD",
+                        "HEALTH",
+                        "HOUSING",
+                        "MISC",
+                        "TRANSFER",
+                        "TRANSPORT",
+                        "UTILITIES"
+                    ],
+                    "type": "string"
+                },
+                "centAmount": {
+                    "type": "number"
+                },
+                "centAmountWithExpenses": {
+                    "type": "number"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "currencyCentAmount": {
+                    "type": "number"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "expenses": {
+                    "items": {
+                        "$ref": "#/definitions/Expense"
+                    },
+                    "type": "array"
+                },
+                "fullDescription": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "source": {
+                    "$ref": "#/definitions/TransactionSource"
+                },
+                "subcategory": {
+                    "enum": [
+                        "ALCOOL",
+                        "CAR_RENTAL",
+                        "CLOTHING",
+                        "COFFEE",
+                        "FURNITURE",
+                        "GROCERY",
+                        "HAIRCUT",
+                        "HEALTHCARE",
+                        "MTG",
+                        "PHARMACY",
+                        "PHONE",
+                        "RESTAURANT",
+                        "SUBSCRIPTION"
+                    ],
+                    "type": "string"
+                },
+                "timestamps": {
+                    "properties": {
+                        "authorizedAt": {
+                            "type": "number"
+                        },
+                        "postedAt": {
+                            "type": "number"
+                        }
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        }
+    }
+}
+
