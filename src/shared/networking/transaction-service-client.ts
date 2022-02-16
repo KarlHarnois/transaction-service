@@ -1,22 +1,9 @@
 import { AccwebTransaction, Transaction } from "@shared/types"
 import fetch, { Response } from "node-fetch"
-
-export interface TransactionUpdatePayload {
-  type: string
-}
+import * as types from "@shared/types"
 
 export interface UpdateTransactionResponse {
   transaction: Transaction
-}
-
-export interface AccwebUpdatePayload extends TransactionUpdatePayload {
-  sourceName: string
-  transaction: AccwebTransaction
-}
-
-export interface CreateAccwebImportPayload {
-  sourceName: string
-  transactions: AccwebTransaction[]
 }
 
 export class TransactionServiceClient {
@@ -27,7 +14,7 @@ export class TransactionServiceClient {
   }
 
   updateTransaction(
-    payload: AccwebUpdatePayload
+    payload: types.UpdateTransactionPayload
   ): Promise<UpdateTransactionResponse> {
     return fetch(`${this.props.baseUrl}/transactions`, {
       method: "PUT",

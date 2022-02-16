@@ -126,3 +126,14 @@ export interface CreateExpensePayload {
     centAmount: number
   }
 }
+
+export interface UpdateTransactionPayload {
+  type: string
+  sourceName: string
+  transaction: AccwebTransaction
+}
+
+export interface CreateAccwebImportPayload {
+  sourceName: string
+  transactions: AccwebTransaction[]
+}

@@ -6,7 +6,6 @@ import {
 import { DynamoDBSource } from "@shared/persistence/datasource"
 import { AccwebUpdater } from "./accweb-updater"
 import { env, Logger } from "@shared/utils"
-import { AccwebUpdatePayload } from "@shared/networking/transaction-service-client"
 import { Handler, Event } from "../handler"
 
 export class UpdateTransactionHandler extends Handler {
@@ -18,7 +17,7 @@ export class UpdateTransactionHandler extends Handler {
   }
 
   async processEvent(event: Event) {
-    this.validateBody("AccwebUpdatePayload", event)
+    this.validateBody("UpdateTransactionPayload", event)
     const updater = new AccwebUpdater({ repo: this.props.repo })
     const transaction = await updater.process(event.body)
     return this.response(200, { transaction })

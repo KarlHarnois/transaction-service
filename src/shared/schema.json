@@ -115,6 +115,21 @@
       ],
       "type": "string"
     },
+    "CreateAccwebImportPayload": {
+      "properties": {
+        "sourceName": {
+          "type": "string"
+        },
+        "transactions": {
+          "items": {
+            "$ref": "#/definitions/AccwebTransaction"
+          },
+          "type": "array"
+        }
+      },
+      "required": ["sourceName", "transactions"],
+      "type": "object"
+    },
     "CreateExpensePayload": {
       "properties": {
         "expense": {
@@ -418,6 +433,21 @@
         "source",
         "timestamps"
       ],
+      "type": "object"
+    },
+    "UpdateTransactionPayload": {
+      "properties": {
+        "sourceName": {
+          "type": "string"
+        },
+        "transaction": {
+          "$ref": "#/definitions/AccwebTransaction"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "required": ["sourceName", "transaction", "type"],
       "type": "object"
     }
   }
