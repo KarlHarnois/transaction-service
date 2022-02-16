@@ -32,7 +32,7 @@ describe("PatternMatcherMiddleware", () => {
       expect(result.subcategory).toEqual("COFFEE")
     })
 
-    describe("when override has not subcategory", () => {
+    describe("when override has no subcategory", () => {
       const transaction = factories.createTransaction({
         fullDescription: "Paiement Caisse",
         subcategory: "PHONE"
