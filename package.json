@@ -15,6 +15,7 @@
     "cdk": "cdk",
     "prettier": "npx prettier --write .",
     "token:gen": "ts-node -r tsconfig-paths/register bin/generate-auth-token",
+    "schema:gen": "typescript-json-schema tsconfig.json \"*\" --include \"./src/**/types.ts\" > \"tmp/jsonschema.json\"",
     "accweb:download": "tsc && ts-node -r tsconfig-paths/register bin/download-accweb-transactions",
     "accweb:import": "tsc && ts-node -r tsconfig-paths/register bin/import-accweb-transactions",
     "staging:deploy": "npm run build && APPLICATION_ENV=Staging npm run cdk deploy Transaction*",
