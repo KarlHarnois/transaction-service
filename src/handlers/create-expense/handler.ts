@@ -35,7 +35,7 @@ export class CreateExpenseHandler extends Handler {
       throw new Error(`Transaction with id ${id} not found.`)
     }
 
-    this.validateJSON({ definition: "Transaction", data: transaction })
+    this.validateData({ definition: "Transaction", data: transaction })
     return transaction
   }
 

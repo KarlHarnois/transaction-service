@@ -68,10 +68,10 @@ export abstract class Handler {
 
   validateBody(definition: string, event: Event) {
     this.validateBodyIsPresent(event)
-    this.validateJSON({ definition: definition, data: event.body })
+    this.validateData({ definition: definition, data: event.body })
   }
 
-  validateJSON(args: SchemaValidatorArguments) {
+  validateData(args: SchemaValidatorArguments) {
     new SchemaValidator().validate(args)
   }
 
