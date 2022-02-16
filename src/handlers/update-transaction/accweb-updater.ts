@@ -1,7 +1,7 @@
 import { TransactionRepository } from "@shared/persistence/transaction-repository"
 import { AccwebUpdatePayload } from "@shared/networking/transaction-service-client"
 import { TransactionParser } from "./transaction-parser"
-import { allMiddlewares } from "./transaction-parser-middlewares"
+import { allMiddlewares } from "./middlewares"
 
 export class AccwebUpdater {
   private readonly repo

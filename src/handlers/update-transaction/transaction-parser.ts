@@ -1,5 +1,5 @@
 import { IdGenerator } from "@shared/persistence/id-generator"
-import { Middleware } from "./transaction-parser-middlewares/middleware"
+import { Middleware } from "./middlewares/middleware"
 import { categoryMap, subcategoryMap } from "./categories"
 
 import {

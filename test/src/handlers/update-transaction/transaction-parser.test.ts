@@ -1,5 +1,5 @@
 import { TransactionParser } from "@handlers/update-transaction/transaction-parser"
-import { allMiddlewares } from "@handlers/update-transaction/transaction-parser-middlewares/index"
+import { allMiddlewares } from "@handlers/update-transaction/middlewares/index"
 import * as fixtures from "@test/fixtures"
 
 describe("TransactionParser", () => {
