@@ -30,8 +30,13 @@ export class CreateExpenseHandler extends Handler {
   private async findTransaction(id: string) {
     const repo = new PersistedTransactionRepository(this.props)
     const transaction = await repo.find(id)
-    if (<types.Transaction>transaction) return transaction
-    throw new Error(`Transaction with id ${id} not found.`)
+
+    if (transaction === undefined) {
+      throw new Error(`Transaction with id ${id} not found.`)
+    }
+
+    this.validateJSON({ definition: "Transaction", data: transaction })
+    return transaction
   }
 
   private buildExpense(

@@ -71,7 +71,7 @@ export abstract class Handler {
     this.validateJSON({ definition: definition, data: event.body })
   }
 
-  private validateJSON(args: SchemaValidatorArguments) {
+  validateJSON(args: SchemaValidatorArguments) {
     new SchemaValidator().validate(args)
   }
 
