@@ -11,7 +11,7 @@ describe("SchemaValidator", () => {
   describe("validate", () => {
     describe("when data is invalid", () => {
       it("throws an error", () => {
-        const args = { typename: "Monkey", data: { foo: "bar" } }
+        const args = { definition: "Monkey", data: { foo: "bar" } }
         const func = () => subject.validate(args)
         const error = new Error("Schema definition for type Monkey not found.")
         expect(func).toThrow(error)
@@ -22,7 +22,7 @@ describe("SchemaValidator", () => {
       const data = factories.createTransaction({})
 
       it("does not throw an error", () => {
-        const func = () => subject.validate({ typename: "Transaction", data })
+        const func = () => subject.validate({ definition: "Transaction", data })
         expect(func).not.toThrow()
       })
     })
@@ -31,7 +31,7 @@ describe("SchemaValidator", () => {
       const data = { foo: "bar" }
 
       it("throws an error", () => {
-        const func = () => subject.validate({ typename: "Transaction", data })
+        const func = () => subject.validate({ definition: "Transaction", data })
         expect(func).toThrow()
       })
     })

@@ -3,7 +3,7 @@ import Ajv from "ajv"
 import * as schema from "./schema.json"
 
 export class SchemaValidatorArguments {
-  typename: string
+  definition: string
   data: any
 }
 
@@ -15,10 +15,10 @@ export class SchemaValidator {
   }
 
   validate(args: SchemaValidatorArguments) {
-    const validate = this.ajv.getSchema(`#/definitions/${args.typename}`)
+    const validate = this.ajv.getSchema(`#/definitions/${args.definition}`)
 
     if (validate === undefined) {
-      throw new Error(`Schema definition for type ${args.typename} not found.`)
+      throw new Error(`Schema definition for type ${args.definition} not found.`)
     }
     if (validate(args.data)) return
     throw this.mergeErrors(validate.errors ?? [])
