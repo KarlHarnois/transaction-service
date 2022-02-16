@@ -120,3 +120,20 @@ export interface TransactionSummary {
   year: number
   centAmounts: any
 }
+
+export interface CreateExpensePayload {
+  expense: {
+    centAmount: number
+  }
+}
+
+export interface UpdateTransactionPayload {
+  type: string
+  sourceName: string
+  transaction: AccwebTransaction
+}
+
+export interface CreateAccwebImportPayload {
+  sourceName: string
+  transactions: AccwebTransaction[]
+}

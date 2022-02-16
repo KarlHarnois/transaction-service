@@ -1,7 +1,7 @@
 import { TransactionRepository } from "@shared/persistence/transaction-repository"
-import { AccwebUpdatePayload } from "@shared/networking/transaction-service-client"
 import { TransactionParser } from "./transaction-parser"
 import { allMiddlewares } from "./middlewares"
+import { UpdateTransactionPayload } from "@shared/types"
 
 export class AccwebUpdater {
   private readonly repo
@@ -10,14 +10,14 @@ export class AccwebUpdater {
     this.repo = props.repo
   }
 
-  async process(payload: AccwebUpdatePayload) {
+  async process(payload: UpdateTransactionPayload) {
     const parser = this.createParser(payload)
     const transaction = parser.parseSingle(payload.transaction)
     this.repo.persist(transaction)
     return transaction
   }
 
-  private createParser(payload: AccwebUpdatePayload) {
+  private createParser(payload: UpdateTransactionPayload) {
     return new TransactionParser({
       sourceName: payload.sourceName,
       middlewares: allMiddlewares

@@ -2,7 +2,7 @@ import {
   AccwebRepository,
   PersistedAccwebRepository
 } from "@shared/persistence/accweb-repository"
-import { CreateAccwebImportPayload } from "@shared/networking/transaction-service-client"
+
 import { DynamoDBSource } from "@shared/persistence/datasource"
 import { IdGenerator } from "@shared/persistence/id-generator"
 import { env, Logger } from "@shared/utils"
@@ -17,14 +17,13 @@ export class CreateAccwebImportHandler extends Handler {
   }
 
   async processEvent(event: Event) {
-    this.validateBodyIsPresent(event)
-    const payload: CreateAccwebImportPayload = event.body
+    this.validateBody("CreateAccwebImportPayload", event)
     const previousImport = await this.findMostRecentImport()
     const number = (previousImport?.number ?? 0) + 1
     const accwebImport = await this.persistImport(number)
     const transactions = this.repo.persistTransactions(
       accwebImport,
-      payload.transactions
+      event.body.transactions
     )
     return this.response(201, { transactions, import: accwebImport })
   }

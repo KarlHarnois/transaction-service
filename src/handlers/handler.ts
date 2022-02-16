@@ -1,5 +1,10 @@
 import { Logger } from "@shared/utils"
 
+import {
+  SchemaValidator,
+  SchemaValidatorArguments
+} from "@shared/schema-validator"
+
 export interface Event {
   body?: any
   queryStringParameters?: any
@@ -48,10 +53,6 @@ export abstract class Handler {
     throw new Error("Path id not found.")
   }
 
-  validateBodyIsPresent(event: Event) {
-    if (event.body === undefined) throw new Error("Payload not found.")
-  }
-
   validateMonthYear(event: Event) {
     const year = event.queryStringParameters?.year
     const month = event.queryStringParameters?.month
@@ -63,6 +64,19 @@ export abstract class Handler {
       year: parseInt(year),
       month: parseInt(month)
     }
+  }
+
+  validateBody(definition: string, event: Event) {
+    this.validateBodyIsPresent(event)
+    this.validateJSON({ definition: definition, data: event.body })
+  }
+
+  private validateJSON(args: SchemaValidatorArguments) {
+    new SchemaValidator().validate(args)
+  }
+
+  private validateBodyIsPresent(event: Event) {
+    if (event.body === undefined) throw new Error("Payload not found.")
   }
 
   private parseBody(event: Event): Event {
