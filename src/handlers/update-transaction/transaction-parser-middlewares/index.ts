@@ -9,7 +9,9 @@ export const allMiddlewares: Middleware[] = [
     cafe: { category: "FOOD", subcategory: "COFFEE" },
     coffee: { category: "FOOD", subcategory: "COFFEE" },
     "bonjour sante": { category: "HEALTH", subcategory: "SUBSCRIPTION" },
-    maisonvirgn: { category: "UTILITIES", subcategory: "PHONE" },
-    barber: { category: "MISC", subcategory: "HAIRCUT" }
+    fido: { category: "UTILITIES", subcategory: "PHONE" },
+    barber: { category: "MISC", subcategory: "HAIRCUT" },
+    communauto: { category: "TRANSPORT", subcategory: "CAR_RENTAL" },
+    "paiement caisse": { category: "TRANSFER" }
   })
 ]

@@ -15,7 +15,7 @@ export class KeywordMapMiddleware implements Middleware {
   }
 
   apply(transaction: Transaction): Transaction {
-    const description = transaction.description.toLowerCase()
+    const description = transaction.fullDescription.toLowerCase()
 
     for (const [keyword, value] of Object.entries(this.config)) {
       if (description.includes(keyword)) {
