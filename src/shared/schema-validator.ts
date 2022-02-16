@@ -18,7 +18,9 @@ export class SchemaValidator {
     const validate = this.ajv.getSchema(`#/definitions/${args.definition}`)
 
     if (validate === undefined) {
-      throw new Error(`Schema definition for type ${args.definition} not found.`)
+      throw new Error(
+        `Schema definition for type ${args.definition} not found.`
+      )
     }
     if (validate(args.data)) return
     throw this.mergeErrors(validate.errors ?? [])

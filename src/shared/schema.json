@@ -115,6 +115,21 @@
       ],
       "type": "string"
     },
+    "CreateExpensePayload": {
+      "properties": {
+        "expense": {
+          "properties": {
+            "centAmount": {
+              "type": "number"
+            }
+          },
+          "required": ["centAmount"],
+          "type": "object"
+        }
+      },
+      "required": ["expense"],
+      "type": "object"
+    },
     "Credentials": {
       "properties": {
         "cardNumber": {

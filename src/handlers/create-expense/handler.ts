@@ -3,14 +3,8 @@ import { DataSource, DynamoDBSource } from "@shared/persistence/datasource"
 import { Handler, Event } from "../handler"
 import { PersistedTransactionRepository } from "@shared/persistence/transaction-repository"
 import { PersistedExpenseRepository } from "@shared/persistence/expense-repository"
-import { ExpenseWithTransactionDetails, Transaction } from "@shared/types"
 import { IdGenerator } from "@shared/persistence/id-generator"
-
-interface CreateExpensePayload {
-  expense: {
-    centAmount: number
-  }
-}
+import * as types from "@shared/types"
 
 export class CreateExpenseHandler extends Handler {
   private readonly props
@@ -25,11 +19,10 @@ export class CreateExpenseHandler extends Handler {
   }
 
   async processEvent(event: Event) {
-    this.validateBodyIsPresent(event)
-    const payload: CreateExpensePayload = event.body
+    this.validateBody("CreateExpensePayload", event)
     const transactionId = this.validatePathId(event)
     const transaction = await this.findTransaction(transactionId)
-    const expense = this.buildExpense(payload, transaction)
+    const expense = this.buildExpense(event.body, transaction)
     await this.persistExpense(expense)
     return this.response(201, { expense })
   }
@@ -37,14 +30,14 @@ export class CreateExpenseHandler extends Handler {
   private async findTransaction(id: string) {
     const repo = new PersistedTransactionRepository(this.props)
     const transaction = await repo.find(id)
-    if (<Transaction>transaction) return transaction
+    if (<types.Transaction>transaction) return transaction
     throw new Error(`Transaction with id ${id} not found.`)
   }
 
   private buildExpense(
-    payload: CreateExpensePayload,
-    transaction: Transaction
-  ): ExpenseWithTransactionDetails {
+    payload: types.CreateExpensePayload,
+    transaction: types.Transaction
+  ): types.ExpenseWithTransactionDetails {
     const generator = new IdGenerator()
     const params = payload.expense
 
@@ -58,7 +51,7 @@ export class CreateExpenseHandler extends Handler {
     }
   }
 
-  private async persistExpense(expense: ExpenseWithTransactionDetails) {
+  private async persistExpense(expense: types.ExpenseWithTransactionDetails) {
     const repo = new PersistedExpenseRepository(this.props)
     return await repo.persist(expense)
   }

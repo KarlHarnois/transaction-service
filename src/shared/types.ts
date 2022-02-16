@@ -120,3 +120,9 @@ export interface TransactionSummary {
   year: number
   centAmounts: any
 }
+
+export interface CreateExpensePayload {
+  expense: {
+    centAmount: number
+  }
+}

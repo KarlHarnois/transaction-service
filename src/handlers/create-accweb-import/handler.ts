@@ -17,14 +17,12 @@ export class CreateAccwebImportHandler extends Handler {
   }
 
   async processEvent(event: Event) {
-    this.validateBodyIsPresent(event)
-    const payload: CreateAccwebImportPayload = event.body
     const previousImport = await this.findMostRecentImport()
     const number = (previousImport?.number ?? 0) + 1
     const accwebImport = await this.persistImport(number)
     const transactions = this.repo.persistTransactions(
       accwebImport,
-      payload.transactions
+      event.body.transactions
     )
     return this.response(201, { transactions, import: accwebImport })
   }
