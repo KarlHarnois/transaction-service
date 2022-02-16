@@ -21,6 +21,8 @@ export class TransactionSummaryBuilder {
     transaction: types.TransactionWithExpense,
     summary: types.TransactionSummary
   ) {
+    if (transaction.category === "TRANSFER") return
+
     const amount = transaction.centAmountWithExpenses
     summary.centAmounts.total += amount
 
