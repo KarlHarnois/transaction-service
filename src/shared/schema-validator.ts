@@ -14,7 +14,7 @@ export class SchemaValidator {
     this.ajv = new Ajv({ allErrors: true, schemas: [schema] })
   }
 
-  validate<Type>(args: SchemaValidatorArguments) {
+  validate(args: SchemaValidatorArguments) {
     const validate = this.ajv.getSchema(`#/definitions/${args.typename}`)
 
     if (validate === undefined) {
