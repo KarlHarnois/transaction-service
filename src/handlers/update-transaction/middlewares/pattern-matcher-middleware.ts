@@ -3,7 +3,7 @@ import { Transaction } from "@shared/types"
 import * as types from "@shared/types"
 
 export interface Matcher {
-  pattern: any
+  patterns: { [key: string]: string }
   override: CategoryOverride
 }
 
@@ -12,7 +12,7 @@ interface CategoryOverride {
   subcategory?: types.Subcategory
 }
 
-export class CategoryMatcherMiddleware implements Middleware {
+export class PatternMatcherMiddleware implements Middleware {
   private readonly matchers
 
   constructor(matchers: Matcher[]) {
@@ -32,17 +32,18 @@ export class CategoryMatcherMiddleware implements Middleware {
   private isMatching(transaction: Transaction, matcher: Matcher) {
     let isMatching = false
 
-    for (let [key, value] of Object.entries(matcher.pattern)) {
+    for (let [key, pattern] of Object.entries(matcher.patterns)) {
       if (key in transaction) {
         const valueToMatch = (transaction as any)[key]
-        isMatching = this.isMatchingSubstring(valueToMatch, value as string)
+        isMatching = this.isMatchingRegex(valueToMatch, pattern)
       }
     }
     return isMatching
   }
 
-  private isMatchingSubstring(property: string, value: string) {
-    return property.toLocaleLowerCase().includes(value.toLocaleLowerCase())
+  private isMatchingRegex(property: string, pattern: string) {
+    const regex = new RegExp(pattern)
+    return regex.test(property.toLocaleLowerCase())
   }
 
   private applyOverride(transaction: Transaction, override: CategoryOverride) {

@@ -1,30 +1,44 @@
-import { CategoryMatcherMiddleware } from "@handlers/update-transaction/middlewares/category-matcher-middleware"
+import { PatternMatcherMiddleware } from "@handlers/update-transaction/middlewares/pattern-matcher-middleware"
 import * as factories from "@test/factories"
 
-describe("CategoryMatcherMiddleware", () => {
-  let subject: CategoryMatcherMiddleware
+describe("PatternMatcherMiddleware", () => {
+  let subject: PatternMatcherMiddleware
 
   beforeEach(() => {
-    subject = new CategoryMatcherMiddleware([
+    subject = new PatternMatcherMiddleware([
       {
-        pattern: { description: "Some Nice Coffee Shop" },
+        patterns: { description: "cafe|coffee" },
         override: { category: "FOOD", subcategory: "COFFEE" }
       },
       {
-        pattern: { fullDescription: "paiement caisse" },
+        patterns: { fullDescription: "paiement caisse" },
         override: { category: "TRANSFER" }
       }
     ])
   })
 
   describe("apply", () => {
+    const transaction = factories.createTransaction({
+      description: "Some nice coffee shop"
+    })
+
+    it("overrides the category", () => {
+      const result = subject.apply(transaction)
+      expect(result.category).toEqual("FOOD")
+    })
+
+    it("overrides the subcategory", () => {
+      const result = subject.apply(transaction)
+      expect(result.subcategory).toEqual("COFFEE")
+    })
+
     describe("when override has not subcategory", () => {
       const transaction = factories.createTransaction({
         fullDescription: "Paiement Caisse",
         subcategory: "PHONE"
       })
 
-      it("assigns the category", () => {
+      it("overrides the category", () => {
         const result = subject.apply(transaction)
         expect(result.category).toEqual("TRANSFER")
       })

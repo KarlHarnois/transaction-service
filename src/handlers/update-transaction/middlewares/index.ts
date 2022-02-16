@@ -1,36 +1,36 @@
 import { MTGMiddleware } from "./mtg-middleware"
 import { Middleware } from "./middleware"
-import { CategoryMatcherMiddleware } from "./category-matcher-middleware"
+import { PatternMatcherMiddleware } from "./pattern-matcher-middleware"
 
 export const allMiddlewares: Middleware[] = [
   new MTGMiddleware(),
-  new CategoryMatcherMiddleware([
+  new PatternMatcherMiddleware([
     {
-      pattern: { fullDescription: "cafe" },
+      patterns: { fullDescription: "cafe|coffee" },
       override: { category: "FOOD", subcategory: "COFFEE" }
     },
     {
-      pattern: { fullDescription: "bonjour sante" },
+      patterns: { fullDescription: "bonjour sante" },
       override: { category: "HEALTH", subcategory: "SUBSCRIPTION" }
     },
     {
-      pattern: { fullDescription: "bonjour sante" },
+      patterns: { fullDescription: "bonjour sante" },
       override: { category: "HEALTH", subcategory: "SUBSCRIPTION" }
     },
     {
-      pattern: { fullDescription: "fido" },
+      patterns: { fullDescription: "fido" },
       override: { category: "UTILITIES", subcategory: "PHONE" }
     },
     {
-      pattern: { fullDescription: "barber" },
+      patterns: { fullDescription: "barber" },
       override: { category: "MISC", subcategory: "HAIRCUT" }
     },
     {
-      pattern: { fullDescription: "communauto" },
+      patterns: { fullDescription: "communauto" },
       override: { category: "TRANSPORT", subcategory: "CAR_RENTAL" }
     },
     {
-      pattern: { fullDescription: "paiement caisse" },
+      patterns: { fullDescription: "paiement caisse" },
       override: { category: "TRANSPORT" }
     }
   ])
