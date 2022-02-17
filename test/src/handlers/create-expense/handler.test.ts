@@ -85,10 +85,12 @@ describe("CreateExpenseHandler", () => {
         })
 
         beforeEach(() => {
-          const timestamps = { authorizedAt: 1640304000000 }
           const transaction = factories.createTransaction({
             id: "txn_123456",
-            timestamps
+            timestamps: {
+              authorizedAt: 1640304000000,
+              postedAt: 1640304000000
+            }
           })
           dataSource.jsonObjects = { txn: [transaction] }
         })
