@@ -62,6 +62,5 @@ if (sourceName) {
     })
     .catch((err) => console.log(err.message))
 } else {
-  console.log("--sourceName is not provided")
-  process.exit()
+  console.log("--sourceName argument not found.")
 }
