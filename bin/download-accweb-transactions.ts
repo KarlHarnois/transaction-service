@@ -1,13 +1,14 @@
 import { AccwebClient } from "@shared/networking/accweb-client"
 import { AccwebTransaction } from "@shared/types"
 import { env } from "@shared/utils"
+import { ArgumentParser } from "@shared/argument-parser"
 import * as fs from "fs"
 
 require("dotenv").config({ path: ".envrc" })
 
-const sourceName = "MasterCard"
-
-function downloadAccwebTransactions(): Promise<AccwebTransaction[]> {
+function downloadAccwebTransactions(
+  sourceName: string
+): Promise<AccwebTransaction[]> {
   const client = new AccwebClient({
     cardNumber: env("DESJARDINS_CARD_NUMBER"),
     password: env("DESJARDINS_PASSWORD"),
@@ -50,9 +51,17 @@ function storeTransactions(transactions: AccwebTransaction[]) {
   return transactions
 }
 
-downloadAccwebTransactions()
-  .then(storeTransactions)
-  .then((transactions) => {
-    console.log(`Successfully downloaded ${transactions.length} transactions`)
-  })
-  .catch((err) => console.log(err.message))
+const parser = new ArgumentParser(process.argv.slice(2))
+const sourceName = parser.getArgument("sourceName")
+
+if (sourceName) {
+  downloadAccwebTransactions(sourceName)
+    .then(storeTransactions)
+    .then((transactions) => {
+      console.log(`Successfully downloaded ${transactions.length} transactions`)
+    })
+    .catch((err) => console.log(err.message))
+} else {
+  console.log("--sourceName is not provided")
+  process.exit()
+}

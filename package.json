@@ -16,7 +16,7 @@
     "prettier": "npx prettier --write .",
     "token:gen": "ts-node -r tsconfig-paths/register bin/generate-auth-token",
     "schema:update": "typescript-json-schema tsconfig.json \"*\" --include \"./src/shared/types.ts\" --required true > \"./src/shared/schema.json\" && npm run prettier",
-    "accweb:download": "tsc && ts-node -r tsconfig-paths/register bin/download-accweb-transactions",
+    "accweb:download": "tsc && ts-node -r tsconfig-paths/register bin/download-accweb-transactions --sourceName MasterCard",
     "accweb:import": "tsc && ts-node -r tsconfig-paths/register bin/import-accweb-transactions",
     "staging:deploy": "npm run build && APPLICATION_ENV=Staging npm run cdk deploy Transaction*",
     "production:deploy": "npm run build && APPLICATION_ENV=Production npm run cdk deploy Transaction*",
