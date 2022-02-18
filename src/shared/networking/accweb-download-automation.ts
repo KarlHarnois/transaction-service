@@ -1,5 +1,4 @@
 import * as playwright from "playwright"
-import * as utils from "@shared/utils"
 
 import {
   AccwebTransaction,
@@ -78,10 +77,18 @@ export class AccwebDownloadAutomation {
   private async gotoProduct() {
     const selector = this.PRODUCT_TITLE_SELECTOR
     await this.page.waitForSelector(selector)
-    const allLinks = await this.page.$$(selector)
-    const link = await utils.asyncFind(allLinks, async (link) =>
-      this.isProductLink(link)
-    )
+    let links = await this.page.$$(selector)
+    let matchingLinks = []
+
+    for (const link of links) {
+      const isProduct = await this.isProductLink(link)
+
+      if (isProduct) {
+        matchingLinks.push(link)
+      }
+    }
+
+    const link = matchingLinks[matchingLinks.length - 1]
 
     if (link) {
       await link.click()

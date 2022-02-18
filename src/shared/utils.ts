@@ -1,11 +1,3 @@
-export async function asyncFind<A>(
-  array: A[],
-  predicate: (a: A) => Promise<boolean>
-) {
-  const result = await Promise.all(array.map(predicate))
-  return array.find((_, index) => result[index])
-}
-
 export function env(key: string): string {
   const value = process.env[key]
 

@@ -3,11 +3,10 @@ import { AuthToken } from "@shared/auth-token"
 import { TransactionServiceClient } from "@shared/networking/transaction-service-client"
 import { AccwebTransaction, Transaction } from "@shared/types"
 import { ImportValidator } from "@shared/validation/import-validator"
+import { ArgumentParser } from "@shared/argument-parser"
 import * as fs from "fs"
 
 require("dotenv").config({ path: ".envrc" })
-
-const sourceName = "MasterCard"
 
 interface Summary {
   successes: SuccessResult[]
@@ -47,6 +46,7 @@ function readTransactions(): Promise<AccwebTransaction[]> {
 }
 
 async function createSingleTransaction(
+  sourceName: string,
   client: TransactionServiceClient,
   transaction: AccwebTransaction
 ): Promise<Result> {
@@ -88,7 +88,10 @@ function aggregateResults(results: Result[]) {
   return summary
 }
 
-async function createManyTransactions(transactions: AccwebTransaction[]) {
+async function createManyTransactions(
+  sourceName: string,
+  transactions: AccwebTransaction[]
+) {
   const secret = env("AUTH_TOKEN_SECRET")
   const apiKey = env("API_KEY")
   const token = new AuthToken({}).encode(secret)
@@ -110,7 +113,7 @@ async function createManyTransactions(transactions: AccwebTransaction[]) {
   for (const batch of transactionBatches) {
     const batchResults = await Promise.all(
       batch.map(async (transaction) => {
-        return createSingleTransaction(client, transaction)
+        return createSingleTransaction(sourceName, client, transaction)
       })
     )
     batchResults.forEach((res) => allResults.push(res))
@@ -119,21 +122,30 @@ async function createManyTransactions(transactions: AccwebTransaction[]) {
   return aggregateResults(allResults)
 }
 
-readTransactions()
-  .then(createManyTransactions)
-  .then((summary) => {
-    console.log(
-      `Created ${summary.successes.length} transactions with ${summary.errors.length} errors`
-    )
+const parser = new ArgumentParser(process.argv)
+const sourceName = parser.getArgument("sourceName")
 
-    summary.errors.forEach((error) => {
-      console.log(
-        `Error for transaction ${error.accwebIdentifier}: ${error.error}`
-      )
+if (sourceName) {
+  readTransactions()
+    .then((transactions) => {
+      return createManyTransactions(sourceName, transactions)
     })
+    .then((summary) => {
+      console.log(
+        `Created ${summary.successes.length} transactions with ${summary.errors.length} errors`
+      )
 
-    const output = new ImportValidator()
-      .validate(summary.successes.flatMap((s) => s.transaction))
-      .errors.forEach((error) => console.log(error.message))
-  })
-  .catch((err) => console.log(err.message))
+      summary.errors.forEach((error) => {
+        console.log(
+          `Error for transaction ${error.accwebIdentifier}: ${error.error}`
+        )
+      })
+
+      const output = new ImportValidator()
+        .validate(summary.successes.flatMap((s) => s.transaction))
+        .errors.forEach((error) => console.log(error.message))
+    })
+    .catch((err) => console.log(err.message))
+} else {
+  console.log("--sourceName argument not found.")
+}
