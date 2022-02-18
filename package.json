@@ -19,6 +19,8 @@
     "visa:download": "npm run accweb:download -- --sourceName Visa",
     "mastercard:download": "npm run accweb:download -- --sourceName MasterCard",
     "accweb:download": "tsc && ts-node -r tsconfig-paths/register bin/download-accweb-transactions",
+    "visa:import": "npm run accweb:import -- --sourceName Visa",
+    "mastercard:import": "npm run accweb:import -- --sourceName MasterCard",
     "accweb:import": "tsc && ts-node -r tsconfig-paths/register bin/import-accweb-transactions",
     "staging:deploy": "npm run build && APPLICATION_ENV=Staging npm run cdk deploy Transaction*",
     "production:deploy": "npm run build && APPLICATION_ENV=Production npm run cdk deploy Transaction*",

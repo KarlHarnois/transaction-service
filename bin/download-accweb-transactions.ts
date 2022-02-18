@@ -51,7 +51,7 @@ function storeTransactions(transactions: AccwebTransaction[]) {
   return transactions
 }
 
-const parser = new ArgumentParser(process.argv.slice(2))
+const parser = new ArgumentParser(process.argv)
 const sourceName = parser.getArgument("sourceName")
 
 if (sourceName) {
