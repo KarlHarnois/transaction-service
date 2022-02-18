@@ -21,12 +21,11 @@ export class AccwebClient {
       headless: false,
       slowMo: 300
     })
-    const page = await browser.newPage()
 
     const automation = new AccwebDownloadAutomation({
       credentials: this.credentials,
       product: product,
-      page: page
+      browser: browser
     })
 
     const transactions = await automation.perform()

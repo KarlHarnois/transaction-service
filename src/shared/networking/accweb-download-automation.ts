@@ -9,7 +9,7 @@ import {
 
 export class AccwebDownloadAutomation {
   private readonly props
-  private readonly page
+  private readonly browser
 
   private readonly QUESTION_LABEL_SELECTOR = "label[for=valeurReponse]"
   private readonly PRODUCT_TITLE_SELECTOR = ".titre-produit"
@@ -17,52 +17,53 @@ export class AccwebDownloadAutomation {
   constructor(props: {
     credentials: Credentials
     product: AccwebFinancialProduct
-    page: playwright.Page
+    browser: playwright.ChromiumBrowser
   }) {
     this.props = props
-    this.page = props.page
+    this.browser = props.browser
   }
 
   async perform(): Promise<AccwebTransaction[]> {
-    await this.gotoLogin()
-    await this.fillLogin()
-    await this.waitForScreenAfterLogin()
+    const page = await this.browser.newPage()
+    await this.gotoLogin(page)
+    await this.fillLogin(page)
+    await this.waitForScreenAfterLogin(page)
 
-    if (!this.isProductSummary) {
-      await this.answerQuestion()
+    if (!this.isProductSummary(page)) {
+      await this.answerQuestion(page)
     }
 
-    await this.gotoProduct()
-    const transactions = await this.waitForTransactions()
+    await this.gotoProduct(page)
+    const transactions = await this.waitForTransactions(page)
     return transactions
   }
 
-  private async gotoLogin() {
-    await this.page.goto(
+  private async gotoLogin(page: playwright.Page) {
+    await page.goto(
       "https://accweb.mouv.desjardins.com/identifiantunique/securite-garantie/authentification/auth/manuel"
     )
   }
 
-  private async fillLogin() {
-    await this.page.fill("#codeUtilisateur", this.props.credentials.cardNumber)
-    await this.page.fill("#motDePasse", this.props.credentials.password)
-    await this.page.click("button[type=submit]")
+  private async fillLogin(page: playwright.Page) {
+    await page.fill("#codeUtilisateur", this.props.credentials.cardNumber)
+    await page.fill("#motDePasse", this.props.credentials.password)
+    await page.click("button[type=submit]")
   }
 
-  private async waitForScreenAfterLogin() {
+  private async waitForScreenAfterLogin(page: playwright.Page) {
     await Promise.any([
-      this.page.waitForSelector(this.QUESTION_LABEL_SELECTOR),
-      this.page.waitForSelector(this.PRODUCT_TITLE_SELECTOR)
+      page.waitForSelector(this.QUESTION_LABEL_SELECTOR),
+      page.waitForSelector(this.PRODUCT_TITLE_SELECTOR)
     ])
   }
 
-  private get isProductSummary(): boolean {
-    return this.page.url().includes("sommaire")
+  private isProductSummary(page: playwright.Page): boolean {
+    return page.url().includes("sommaire")
   }
 
-  private async answerQuestion() {
-    await this.page.waitForSelector(this.QUESTION_LABEL_SELECTOR)
-    const label = await this.page.$(this.QUESTION_LABEL_SELECTOR)
+  private async answerQuestion(page: playwright.Page) {
+    await page.waitForSelector(this.QUESTION_LABEL_SELECTOR)
+    const label = await page.$(this.QUESTION_LABEL_SELECTOR)
     const labelText = await label?.textContent()
     const question = labelText?.split(":")?.pop()?.trim()
 
@@ -70,14 +71,14 @@ export class AccwebDownloadAutomation {
       (defiQuestion: DefiQuestion) => defiQuestion.rawValue === question
     )?.answer
 
-    await this.page.fill("#valeurReponse", answer ?? "")
-    await this.page.click("button[type=submit]")
+    await page.fill("#valeurReponse", answer ?? "")
+    await page.click("button[type=submit]")
   }
 
-  private async gotoProduct() {
+  private async gotoProduct(page: playwright.Page) {
     const selector = this.PRODUCT_TITLE_SELECTOR
-    await this.page.waitForSelector(selector)
-    let links = await this.page.$$(selector)
+    await page.waitForSelector(selector)
+    let links = await page.$$(selector)
     let matchingLinks = []
 
     for (const link of links) {
@@ -105,8 +106,8 @@ export class AccwebDownloadAutomation {
     return text?.toLowerCase().includes(productName) ?? false
   }
 
-  private async waitForTransactions() {
-    const response = await this.page.waitForResponse((response) => {
+  private async waitForTransactions(page: playwright.Page) {
+    const response = await page.waitForResponse((response) => {
       return response
         .url()
         .includes(
